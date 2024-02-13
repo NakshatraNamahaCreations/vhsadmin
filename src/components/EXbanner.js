@@ -15,11 +15,11 @@ const active1 = {
 };
 const inactive1 = { color: "black", backgroundColor: "white" };
 
-function Banner() {
-  const [selected1, setSelected1] = useState(0);
+function EXBanner() {
+  const [Height, setHeight] = useState(0);
   const [categorydata, setcategorydata] = useState([]);
   const [banner, setBanner] = useState("");
-  const [subcategory, setsubcategory] = useState("");
+  const [Link, setLink] = useState("");
 
   const [bannerdata, setBannerdata] = useState([]);
   const formdata = new FormData();
@@ -34,11 +34,12 @@ function Banner() {
     e.preventDefault();
 
     formdata.append("banner", banner);
-    formdata.append("subcategory", subcategory);
+    formdata.append("Link", Link);
+    formdata.append("Height", Height);
 
     try {
       const config = {
-        url: "/userapp/addbanner",
+        url: "/userapp/addexbanner",
         method: "post",
         baseURL: "https://api.vijayhomesuperadmin.in/api",
 
@@ -47,7 +48,7 @@ function Banner() {
       await axios(config).then(function (response) {
         if (response.status === 200) {
           alert("Successfully Added");
-          window.location.assign("/banner");
+          window.location.assign("/exclusivebanner");
         }
       });
     } catch (error) {
@@ -72,17 +73,18 @@ function Banner() {
   }, []);
 
   const getbannerimg = async () => {
-    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/getallbanner");
+    let res = await axios.get(
+      "https://api.vijayhomesuperadmin.in/api/userapp/getallexbanner"
+    );
     if ((res.status = 200)) {
       setBannerdata(res.data?.banner);
-      console.log(res.data?.banner);
     }
   };
 
   const deletebannerimg = async (id) => {
     axios({
       method: "post",
-      url: "https://api.vijayhomesuperadmin.in/api/userapp/deletebanner/" + id,
+      url: "https://api.vijayhomesuperadmin.in/api/userapp/deleteexbanner/" + id,
     })
       .then(function (response) {
         //handle success
@@ -106,7 +108,7 @@ function Banner() {
         <div className="row  set_margin ">
           <div>
             <div className="d-flex  mt-3">
-              <h4 style={{ color: "#FF0060" }}>Home Page Slider Images</h4>
+              <h4 style={{ color: "#FF0060" }}>Exclusive Banner</h4>
             </div>
           </div>
         </div>
@@ -119,7 +121,7 @@ function Banner() {
                   variant="danger"
                   onClick={handleShow}
                 >
-                  Add Images
+                  ADD
                 </Button>
               </div>
             </div>
@@ -136,8 +138,9 @@ function Banner() {
                   <thead>
                     <tr>
                       <th>SI.No</th>
-                      <th>Subcategory</th>
-                      <th>Banner Images</th>
+                      <th>Link</th>
+                      <th> Images</th>
+                      <th> Height</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -146,16 +149,16 @@ function Banner() {
                       return (
                         <tr key={i}>
                           <td>{i + 1}</td>
-                          <td>{element.subcategory}</td>
+                          <td>{element.Link}</td>
                           <td>
                             <img
                               className="header_logo"
-                              src={`https://api.vijayhomesuperadmin.in/userbanner/${element.banner}`}
+                              src={`https://api.vijayhomesuperadmin.in/exbanner/${element.banner}`}
                               width={"100px"}
                               height={"50px"}
                             />
                           </td>
-
+                          <td>{element.Height}</td>
                           <td>
                             <Button
                               style={{
@@ -183,32 +186,38 @@ function Banner() {
       <>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Slider Image</Modal.Title>
+            <Modal.Title>ADD</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="vhs-input-label mt-3">
-              Sub-Catagory <span className="text-danger"> *</span>
+              Link <span className="text-danger"> *</span>
             </div>
             <div className="group pt-1">
-              <select
+              <input
                 className="col-md-6 vhs-input-value"
-                onChange={(e) => setsubcategory(e.target.value)}
-              >
-                <option>-- Select subcategory--</option>
-                {categorydata.map((i) => (
-                  <option value={i.subcategory}>{i.subcategory}</option>
-                ))}
-              </select>
+                type="text"
+                onChange={(e) => setLink(e.target.value)}
+              />
             </div>
+            <div className="vhs-input-label mt-3">
+              Height <span className="text-danger"> *</span>
+            </div>
+            <div className="group pt-1">
+              <input
+                className="col-md-6 vhs-input-value"
+                type="text"
+                onChange={(e) => setHeight(e.target.value)}
+              />
+            </div>
+            <span style={{ fontSize: "12px", fontWeight: "bold" }}>
+              Ex-200 (its take pixels)
+            </span>
             <div className="group pt-1 mt-4">
               <input
                 className="col-md-6 vhs-input-value"
                 type="file"
                 onChange={(e) => setBanner(e.target.files[0])}
               />
-              <div className="mt-3" style={{ fontSize: "13px" }}>
-                <b>Note :</b> width=350px,height=150px
-              </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -225,4 +234,4 @@ function Banner() {
   );
 }
 
-export default Banner;
+export default EXBanner;

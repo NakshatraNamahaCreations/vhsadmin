@@ -18,11 +18,13 @@ import { useNavigate } from "react-router-dom";
 function Services() {
   const existingData = JSON.parse(localStorage.getItem("Store_Slots")) || [];
   const plandata = JSON.parse(localStorage.getItem("plans")) || [];
-  const plandetailsdata =
-    JSON.parse(localStorage.getItem("plansdeatils")) || [];
+  const homepagetitleData =
+    JSON.parse(localStorage.getItem("homepagetitle")) || [];
+  const morepriceData = JSON.parse(localStorage.getItem("plansprice")) || [];
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
-
-
+  const [postsubdata, setpostsubdata] = useState([]);
+  const [citydata, setcitydata] = useState([]);
   const [selected, setSelected] = useState(false);
   const [categorydata, setcategorydata] = useState([]);
   const [Servicedata, setServicedata] = useState([]);
@@ -37,21 +39,119 @@ function Services() {
   const [ServiceGst, setServiceGst] = useState("");
   const [NofServiceman, setNofServiceman] = useState("");
   const [Subcategory, setSubcategory] = useState("");
-  const [offerPrice, setofferPrice] = useState("");
-  const [Servicesno, setServicesno] = useState("");
-  const [Slots, setSlots] = useState("");
+  const [category, setcategory] = useState("");
+  // const [Servicesno, setServicesno] = useState("");
+  const [sAddons, setsAddons] = useState("");
+  const [pricecity, setpricecity] = useState("");
+
+  const [Icon, setIcon] = useState("");
+  const [Desc, setDesc] = useState("");
+
+  const [slotsdata, setslotsdata] = useState([]);
+  const [titledata, settitledata] = useState([]);
+  const [slotCity, setslotcity] = useState("");
+  const [startTime, setstartTime] = useState("");
+  const [endTime, setendTime] = useState([]);
+  const [servicePeriod, setservicePeriod] = useState("");
+
   const [Image, setImage] = useState("");
   const [Plans, setPlans] = useState("");
-  const [planName, setplanName] = useState("");
-  const [plansPrice, setplansPrice] = useState("");
-  const [premises, setPremises] = useState("");
-  const [desc, setdesc] = useState("");
-  const [includes, setincludes] = useState("");
-  const [search, setsearch] = useState("");
+  const [homepagetitle, sethomePagetitle] = useState("");
+  const [serviceDirection, setserviceDirection] = useState("");
+  const [searchItems, setSearchItems] = useState("");
   const [serID, setserID] = useState("");
   const [serviceIncludes, setserviceIncludes] = useState("");
   const [serviceExcludes, setserviceExcludes] = useState("");
+  const [quantity, setquantity] = useState("");
+  const [pName, setpName] = useState("");
+  const [pPrice, setpPrice] = useState("");
+  const [pofferprice, setpofferprice] = useState("");
+  const [pservices, setpservices] = useState("");
+  const [servicetitle, setServicetitle] = useState("");
+
+  const [Inimg, setInimg] = useState("");
+  const [Eximg, setEximg] = useState("");
+  const [Desimg, setDesimg] = useState("");
+  const [servicebelow, setServicebelow] = useState("");
+  const [titleName, settitleName] = useState("");
+  const [catdata, setcatdata] = useState([]);
   const formdata = new FormData();
+  const [data, setdata] = useState([]);
+  const [rating, setrating] = useState("");
+
+  const [editCatagoryName, setEditCatagoryName] = useState("");
+  const [editSubcategoryName, setEditSubcategoryName] = useState("");
+  const [editSubCategoryList, setEditSubCategoryList] = useState("");
+  const [editServiceName, setEditServiceName] = useState("");
+  const [editServiceDescription, setEditServiceDescription] = useState("");
+  const [editServiceHour, setEditServiceHour] = useState("");
+  const [editServiceImage, setEditServiceImage] = useState("");
+
+  const [showEdit, setShowEdit] = useState(false);
+  const [editSubcategory, setEditSubcategory] = useState({});
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const handleSwitchToggle = (event) => {
+    setIsEnabled(event.target.checked);
+  };
+
+  const [Servicesno, setServicesno] = useState(
+    new Array(slotsdata.length).fill("")
+  );
+  const handleEdit = (subcategory) => {
+    setEditSubcategory(subcategory);
+    handleShowPopUp(true);
+  };
+
+  const handleShowPopUp = () => {
+    setShowEdit(true);
+  };
+  const handleClosePopup = () => {
+    setShowEdit(false); // Hide the edit form after submitting it or canceling it by pressing
+  };
+
+  const [includes, setIncludes] = useState([]); // State to store includes items
+  const [newInclude, setNewInclude] = useState(""); // State to store the new include text
+  const [desc, setdesc] = useState([]); // State to store includes items
+  const [newdesc, setNewdesc] = useState("");
+
+  const [excludes, setExcludes] = useState([]); // State to store includes items
+  const [newEncludes, setNewExclude] = useState(""); // State to store the new include text
+
+  const [showAddedData, setShowAddedData] = useState(false);
+  const [showAddedData1, setShowAddedData1] = useState(false);
+  const [showAddedData2, setShowAddedData2] = useState(false);
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage1, setSelectedImage1] = useState(null); // State to store the selected image
+  const [selectedImage2, setSelectedImage2] = useState(null); // State to store the selected image
+
+  const handleAddInclude = () => {
+    if (newInclude.trim() !== "" || selectedImage !== null) {
+      const newIncludeItem = { text: newInclude, image: selectedImage };
+      setIncludes([...includes, newIncludeItem]);
+      setNewInclude(""); // Clear the input fields
+      setShowAddedData(true); // Show the added data below the modal
+    }
+  };
+
+  const handleAddExclude = () => {
+    if (newEncludes.trim() !== "" || selectedImage1 !== null) {
+      const newExcludeItem = { text: newEncludes, image: selectedImage1 };
+      setExcludes([...excludes, newExcludeItem]);
+      setNewExclude(""); // Clear the input fields
+      setShowAddedData1(true); // Show the added data below the modal
+    }
+  };
+
+  const handleAdddesc = () => {
+    if (newdesc.trim() !== "" || selectedImage2 !== null) {
+      const newDESCItem = { text: newdesc, image: selectedImage2 };
+      setdesc([...desc, newDESCItem]);
+      setNewdesc(""); // Clear the input fields
+      setShowAddedData2(true); // Show the added data below the modal
+    }
+  };
 
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -60,19 +160,19 @@ function Services() {
     }
   };
 
-  const handleactive1 = () => {
-    setSelected(true);
-  };
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
+  const [show3, setShow3] = useState(false);
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleClose1 = () => setShow1(false);
   const handleShow1 = () => setShow1(true);
   const handleClose2 = () => setShow2(false);
   const handleShow2 = () => setShow2(true);
-
+  const handleClose3 = () => setShow3(false);
+  const handleShow3 = () => setShow3(true);
   const [toggle, setToggel] = useState(true);
   const [toggle1, setToggel1] = useState(false);
   const [toggle2, setToggel2] = useState(true);
@@ -91,23 +191,51 @@ function Services() {
   };
 
   useEffect(() => {
+    getslots();
+    gettitle();
+  }, []);
+
+  const getslots = async () => {
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/getslots");
+    if ((res.status = 200)) {
+      setslotsdata(res.data?.slots);
+    }
+  };
+
+  const gettitle = async () => {
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/gettitle");
+    if ((res.status = 200)) {
+      settitledata(res.data?.homepagetitle);
+    }
+  };
+
+  useEffect(() => {
+    getallsubcategory();
     getcategory();
   }, []);
 
-  const getcategory = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/userapp/getappsubcat");
+  const getallsubcategory = async () => {
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/getappsubcat");
     if ((res.status = 200)) {
       setcategorydata(res.data?.subcategory);
     }
   };
+  
+  const getcategory = async () => {
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/getcategory");
+    if ((res.status = 200)) {
+      setcatdata(res.data?.category);
+    }
+  };
 
+ 
   useEffect(() => {
     getsubcategory();
   }, [Subcategory]);
 
   const getsubcategory = async () => {
     let res = await axios.post(
-      `http://api.vijayhomeservicebengaluru.in/api/userapp/postappresubcat/`,
+      `https://api.vijayhomesuperadmin.in/api/userapp/postappresubcat/`,
       {
         subcategory: Subcategory,
       }
@@ -115,54 +243,55 @@ function Services() {
 
     if ((res.status = 200)) {
       setpostservicename(res.data?.subcategory);
-      console.log("service", res.data?.subcategory);
     }
   };
 
   const postformat = async (e) => {
-    const a = ServiceGst * ServicePrice;
-
-    const sp = parseInt(a) + parseInt(ServicePrice);
-    const b = ServiceGst * offerPrice;
-    const op = parseInt(b) + parseInt(offerPrice);
-
-    if (!ServiceImg || !ServiceName || !ServiceDesc || !ServicePrice) {
+    if (!ServiceName || !desc || !category) {
       alert("Please fill all mandatory fields");
     } else {
       e.preventDefault();
       formdata.append("serviceImg", Image);
       formdata.append("sub_subcategory", sub_subcategory);
       formdata.append("serviceName", ServiceName);
-      formdata.append("servicePrice", sp);
+      formdata.append("serviceDirection", serviceDirection);
+      formdata.append("category", category);
+      formdata.append("Inimg", Inimg);
+      formdata.append("Eximg", Eximg);
+      formdata.append("Desimg", Desimg);
       formdata.append("Subcategory", Subcategory);
-      formdata.append("serviceIncludes", serviceIncludes);
-      formdata.append("serviceExcludes", serviceExcludes);
-
-      formdata.append("offerPrice", op);
+      formdata.append("serviceIncludes", JSON.stringify(includes));
+      formdata.append("serviceExcludes", JSON.stringify(excludes));
+      formdata.append("quantity", quantity);
+      formdata.append("servicetitle", servicetitle);
+      formdata.append("servicebelow", servicebelow);
+      formdata.append("homepagetitle", homepagetitle);
       formdata.append("serviceHour", ServiceHour);
-      formdata.append("serviceDesc", ServiceDesc);
+      formdata.append("serviceDesc", JSON.stringify(desc));
       formdata.append("serviceGst", ServiceGst);
+      formdata.append("rating", rating);
       formdata.append("NofServiceman", NofServiceman);
+      formdata.append("sAddons", JSON.stringify(sAddons));
 
       try {
         const config = {
           url: "/userapp/addservices",
           method: "post",
-          baseURL: "http://api.vijayhomeservicebengaluru.in/api",
+          baseURL: "https://api.vijayhomesuperadmin.in/api",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
           data: formdata,
         };
         await axios(config).then(function (response) {
           if (response.status === 200) {
             alert("Successfully Added");
             const { success, service } = response.data;
-            console.log(success); // Should log "User added successfully"
-            console.log(service); // Should log the service data
-            alert(success);
+
             setserID(service._id);
             // Handle the s
+            localStorage.removeItem("plansprice");
             handelgeneralbtn();
-
-            // window.location.assign("/Service");
           }
         });
       } catch (error) {
@@ -172,28 +301,36 @@ function Services() {
     }
   };
 
+  const [totalRecords, setTotalRecords] = useState(1);
   useEffect(() => {
-    getservicemanagement();
-  }, []);
+  
 
-  const getservicemanagement = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/userapp/getservices");
-    if ((res.status = 200)) {
-      setServicedata(res.data?.service);
-      setfilterdata(res.data?.service);
-      console.log(res.data?.service);
-    }
-  };
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://api.vijayhomesuperadmin.in/api/userapp/getservicespagewise?page=${currentPage}&search=${searchItems}`
+        );
+        const result = await response.json();
 
+        setServicedata(result?.service);
+        setfilterdata(result?.service);
+        setTotalRecords(result?.totalRecords); // Assuming you have a state variable for total records
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [currentPage, searchItems]);
 
   const deletecategory = async (id) => {
     axios({
       method: "post",
-      url: "http://api.vijayhomeservicebengaluru.in/api/userapp/deleteservices/" + id,
+      url: "https://api.vijayhomesuperadmin.in/api/userapp/deleteservices/" + id,
     })
       .then(function (response) {
         //handle success
-        console.log(response);
+
         alert("Deleted successfully");
         window.location.reload();
       })
@@ -203,17 +340,30 @@ function Services() {
       });
   };
 
-  useEffect(() => {
-    const result = Servicedata.filter((item) => {
-      return item.serviceName.toLowerCase().match(search.toLowerCase());
-    });
-    setfilterdata(result);
-  }, [search]);
+  // useEffect(() => {
+  //   const filteredData = Servicedata.filter((item) => {
+  //     const searchString = searchItems.toLowerCase();
+  //     const categoryMatch = item.category?.toLowerCase().includes(searchString);
+  //     const subcategoryMatch =
+  //       item.Subcategory?.toLowerCase().includes(searchString);
+  //     const ServiceNameMatch = item.serviceName
+  //       ?.toLowerCase()
+  //       .includes(searchString);
+  //     return categoryMatch || subcategoryMatch || ServiceNameMatch;
+  //   });
+
+  //   setfilterdata(filteredData);
+  // }, [searchItems, Servicedata]);
+  // setSearchItems
 
   const columns = [
     {
       name: "Sl  No",
-      selector: (row, index) => index + 1,
+      selector: (row, index) => (currentPage - 1) * 15 + index + 1,
+    },
+    {
+      name: "Category",
+      selector: (row) => row.category,
     },
     {
       name: "Subcategory",
@@ -227,20 +377,7 @@ function Services() {
       name: "Service Name",
       selector: (row) => row.serviceName,
     },
-    {
-      name: "Service Price",
-      selector: (row) => row.servicePrice,
-    },
-    {
-      name: "Service Desc",
-      cell: (row) => (
-        <div>
-          {row.serviceDesc?.split("\n").map((item, index) => (
-            <p key={index}>{item}</p>
-          ))}
-        </div>
-      ),
-    },
+
     {
       name: "Service Hours",
       selector: (row) => row.serviceHour,
@@ -250,7 +387,7 @@ function Services() {
       cell: (row) => (
         <div>
           <img
-            src={`http://api.vijayhomeservicebengaluru.in/service/${row.serviceImg}`}
+            src={`https://api.vijayhomesuperadmin.in/service/${row.serviceImg}`}
             width="50px"
             height="50px"
           />
@@ -261,14 +398,87 @@ function Services() {
       name: "Action",
       cell: (row) => (
         <div>
+          {/* <a className="hyperlink" onClick={() => handleEdit(row)}>
+            Edit |
+          </a> */}
           <a onClick={() => deletecategory(row._id)} className="hyperlink mx-1">
             Delete
           </a>
         </div>
       ),
     },
+    // {
+    //   name: "OTHR Active",
+    //   cell: (row) => (
+    //     <div>
+    //       <Form>
+    //         <Form.Check
+    //           type="switch"
+    //           id={`custom-switch-${row?._id}`}
+    //           checked={row?.activeStatus || false}
+    //           onChange={(event) =>
+    //             handleSwitchToggle1(row?._id, event.target.checked)
+    //           }
+    //         />
+    //       </Form>
+    //       {console.log(row?.activeStatus, row.serviceName)}
+    //     </div>
+    //   ),
+    // },
   ];
 
+  // const handleSwitchToggle1 = async (rowId, isActive) => {
+  //   try {
+  //     const config = {
+  //       url: `/userapp/updateenabledisble/${rowId}`,
+  //       method: "post",
+  //       baseURL: "https://api.vijayhomesuperadmin.in/api",
+  //       headers: { "content-type": "application/json" },
+  //       data: {
+  //         activeStatus: isActive,
+  //       },
+  //     };
+  //     const response = await axios(config);
+  //     if (response.status === 200) {
+  //       window.location.reload(); // Reloading on successful update
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert("Not Added");
+  //   }
+  // };
+
+  // const edit = (data) => {
+  //   setdata(data);
+  //   handleShow(true);
+  // };
+
+  useEffect(() => {
+    postsubcategory();
+  }, [category]);
+
+  const postsubcategory = async () => {
+    let res = await axios.post(
+      `https://api.vijayhomesuperadmin.in/api/userapp/postappsubcat/`,
+      {
+        category: category,
+      }
+    );
+
+    if ((res.status = 200)) {
+      setpostsubdata(res.data?.subcategory);
+    }
+  };
+  useEffect(() => {
+    getcity();
+  }, []);
+
+  const getcity = async () => {
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/master/getcity");
+    if ((res.status = 200)) {
+      setcitydata(res.data?.mastercity);
+    }
+  };
   const addadvacedata = async (e) => {
     e.preventDefault();
 
@@ -276,23 +486,23 @@ function Services() {
       const config = {
         url: `/userapp/updateadvanceddata/${serID}`,
         method: "post",
-        baseURL: "http://api.vijayhomeservicebengaluru.in/api",
+        baseURL: "https://api.vijayhomesuperadmin.in/api",
         // data: formdata,
         headers: { "content-type": "application/json" },
         data: {
           // cardno: cardno,
           plans: plandata,
-          Plansdetails: plandetailsdata,
+
+          morepriceData: morepriceData,
           store_slots: existingData,
         },
       };
       await axios(config).then(function (response) {
         if (response.status === 200) {
-          console.log("success");
-          alert(" Added");
           localStorage.removeItem("Store_Slots");
-          localStorage.removeItem("plans");
+          localStorage.removeItem("plansprice");
           localStorage.removeItem("plansdeatils");
+
           setserID("");
           handelsavebtn();
           window.location.reload();
@@ -303,53 +513,156 @@ function Services() {
       alert(" Not Added");
     }
   };
+
+  const updateService = async (e) => {
+    e.preventDefault();
+    try {
+      const serviceId = editSubcategory._id;
+      const formdata = new FormData();
+      formdata.append("category", editCatagoryName);
+      formdata.append("Subcategory", editSubcategoryName);
+      formdata.append("sub_subcategory", editSubCategoryList);
+      formdata.append("serviceName", editServiceName);
+      formdata.append("serviceDesc", editServiceDescription);
+      formdata.append("serviceHour", editServiceHour);
+
+      if (editServiceImage) {
+        formdata.append("serviceImg", editServiceImage);
+      }
+
+      const config = {
+        url: `/userapp/updateservices/${serviceId}`,
+        method: "put",
+        baseURL: "https://api.vijayhomesuperadmin.in/api",
+        data: formdata,
+      };
+      const response = await axios(config);
+      if (response.status === 200) {
+        console.log("success");
+        alert(response.data.message);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Unable to complete the request");
+    }
+  };
+
   const handleSaveChanges = () => {
-    // Retrieve existing data from local storage or initialize an empty array
     const existingData = JSON.parse(localStorage.getItem("Store_Slots")) || [];
-    console.log("Existing Data:", existingData);
 
-    // Add new data to the array
-    const newData = { Slots, Servicesno };
-    existingData.push(newData);
-    console.log("New Data:", newData);
+    // Create an array of objects to store row data and checkbox states
+    const updatedData = slotsdata
+      .map((item, index) => ({
+        id: Date.now() + index, // Unique ID for each row
+        startTime: item.startTime,
+        endTime,
+        slotCity,
+        Servicesno: Servicesno[index],
+        isChecked: checkboxStates[index], // Include the checkbox state
+      }))
+      .filter((item) => item.isChecked);
 
-    // Update local storage with the updated array
+    // Add the updated data to the existing data
+    existingData.push(...updatedData);
+
+    // Update local storage with the combined data
     localStorage.setItem("Store_Slots", JSON.stringify(existingData));
+
     handleClose();
   };
-  const handleSaveplans = () => {
-    // Retrieve existing data from local storage or initialize an empty array
-    const existingData = JSON.parse(localStorage.getItem("plans")) || [];
-    console.log("Existing Data:", existingData);
 
-    // Add new data to the array
-    const newData = { Plans };
-    existingData.push(newData);
-    console.log("New Data:", newData);
+  const handleIncludes = () => {
+    // Assuming you have already uploaded the image and obtained a URL
+    const imageUrl = "https://example.com/path/to/your/image.jpg";
 
-    // Update local storage with the updated array
-    localStorage.setItem("plans", JSON.stringify(existingData));
+    const sIncludeData = JSON.parse(localStorage.getItem("sInclude")) || [];
+
+    const newData = { Icon: imageUrl, Desc };
+    sIncludeData.push(newData);
+
+    localStorage.setItem("sInclude", JSON.stringify(sIncludeData));
     handleClose1();
   };
 
   const handleSaveplans2 = () => {
-    // Retrieve existing data from local storage or initialize an empty array
-    const existingData = JSON.parse(localStorage.getItem("plansdeatils")) || [];
-    console.log("Existing Data:", existingData);
+    // const homepagetitleData =
+    //   JSON.parse(localStorage.getItem("homepagetitle")) || [];
+    // console.log("Existing Data:", existingData);
 
-    // Add new data to the array
-    const newData = { planName, plansPrice, premises, desc, includes };
-    existingData.push(newData);
-    console.log("New Data:", newData);
+    // // Add new data to the array
+    // const newData = { titleName };
+    // homepagetitleData.push(newData);
 
-    // Update local storage with the updated array
-    localStorage.setItem("plansdeatils", JSON.stringify(existingData));
+    // // Update local storage with the updated array
+    // localStorage.setItem("homepagetitle", JSON.stringify(homepagetitleData));
     handleClose2();
   };
 
-  const handleRowClick = (row) => {
-    navigate(`/servicedetails/${row._id}`);
+  const handleSaveplanprice = () => {
+    const morepriceData = JSON.parse(localStorage.getItem("plansprice")) || [];
+    const newId = Date.now(); // You can use a more robust ID generation method if needed
+
+    // Add new data to the array
+    const newData = {
+      id: newId,
+      pricecity,
+      pName,
+      pofferprice,
+      pPrice,
+      pservices,
+      servicePeriod,
+    };
+    morepriceData.push(newData);
+
+    // Update local storage with the updated array
+    localStorage.setItem("plansprice", JSON.stringify(morepriceData));
+    handleClose3();
   };
+
+  const handleRowClick = (row) => {
+    navigate(`/servicedetails/${row._id}`, { state: { rowData: row } });
+  };
+
+  const dataByCity = {};
+
+  existingData.forEach((item) => {
+    const { id, slotCity, startTime, endTime, Servicesno } = item;
+
+    if (!dataByCity[slotCity]) {
+      dataByCity[slotCity] = [];
+    }
+
+    dataByCity[slotCity].push({ id, startTime, endTime, Servicesno });
+  });
+
+  const handleDeleteCity = (id) => {
+    const existingData = JSON.parse(localStorage.getItem("Store_Slots")) || [];
+
+    // Find the index of the item with the specified id
+    const indexToDelete = existingData.findIndex((item) => item.id === id);
+
+    if (indexToDelete !== -1) {
+      // Remove the item at the specified index
+      existingData.splice(indexToDelete, 1);
+
+      // Update local storage with the updated array
+      localStorage.setItem("Store_Slots", JSON.stringify(existingData));
+
+      window.location.reload();
+    }
+  };
+
+  const [checkboxStates, setCheckboxStates] = useState(
+    Array(slotsdata.length).fill(false)
+  );
+
+  const checkHandler = (index) => {
+    const newCheckboxStates = [...checkboxStates];
+    newCheckboxStates[index] = !newCheckboxStates[index];
+    setCheckboxStates(newCheckboxStates);
+  };
+
   return (
     <div div className="row">
       <div className="col-md-2">
@@ -366,135 +679,6 @@ function Services() {
 
             <div className="col-md-12">
               <div className="d-flex float-end mt-3 mb-3">
-                <Offcanvas show={show} onHide={handleClose}>
-                  <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>Filter</Offcanvas.Title>
-                  </Offcanvas.Header>
-                  <Offcanvas.Body>
-                    <Offcanvas.Title>Price</Offcanvas.Title>
-                    <ul>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">All deals</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">Under ₹500 </a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">₹500 to ₹1,000</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">₹1,000 to ₹2,000</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">₹2,000 to ₹5,000</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">₹5,000 and Above</a>
-                      </li>
-                    </ul>
-                    <Offcanvas.Title>Discount</Offcanvas.Title>
-                    <ul>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">All deals</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">10% off or more</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">₹25% off or more</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">50% off or more</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">70% off or more</a>
-                      </li>
-                    </ul>
-                    <Offcanvas.Title>Maximum hour </Offcanvas.Title>
-                    <ul>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">All deals</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#"> 4-9 </a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">7-10</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">7-10</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">7-10</a>
-                      </li>
-                      <li
-                        className={selected ? "hyperlink" : "hyperlink active1"}
-                      >
-                        {" "}
-                        <a href="#">7-10</a>
-                      </li>
-                    </ul>
-                  </Offcanvas.Body>
-
-                  <Button
-                    variant="danger"
-                    style={{
-                      width: "200px",
-                      fontSize: "15px",
-                      textAlign: "center",
-                    }}
-                  >
-                    Filter Apply
-                  </Button>
-                </Offcanvas>
                 <Button
                   type="button"
                   variant="danger"
@@ -509,10 +693,10 @@ function Services() {
               <div className="mt-5">
                 <input
                   type="text"
-                  placeholder="Search service name here.."
+                  placeholder="Search by category, subcategory, service"
                   className="w-25 form-control"
-                  value={search}
-                  onChange={(e) => setsearch(e.target.value)}
+                  value={searchItems}
+                  onChange={(e) => setSearchItems(e.target.value)}
                 />
               </div>
               <div className="mt-1 border">
@@ -520,7 +704,11 @@ function Services() {
                   columns={columns}
                   data={filterdata}
                   pagination
-                  fixedHeader
+                  paginationServer
+                  paginationTotalRows={totalRecords}
+                  paginationPerPage={15}
+                  paginationRowsPerPageOptions={[15, 30, 50]}
+                  onChangePage={(current) => setCurrentPage(current)}
                   selectableRowsHighlight
                   subHeaderAlign="left"
                   highlightOnHover
@@ -547,13 +735,13 @@ function Services() {
                   </Card.Title>
                   <InputGroup className="mb-3">
                     <Form.Control
-                      height={"500px"}
+                      height="100px"
                       type="file"
                       aria-label="Username"
                       onChange={onImageChange}
                     />
                   </InputGroup>
-                  <img src={ServiceImg} />
+                  <img src={ServiceImg} height="150px" />
                   <Card.Body>
                     <Card.Text>
                       <p style={{ fontSize: "12px" }}>
@@ -572,25 +760,22 @@ function Services() {
                   }}
                 >
                   <Card.Title>Service details</Card.Title>
-                  {/* <Form.Label>
-                    Service category <span className="text-danger"> *</span>
+                  <Form.Label className="mt-3">
+                    Category <span className="text-danger"> *</span>
                   </Form.Label>
                   <InputGroup className="mb-2">
                     <Form.Select
                       aria-label="Username"
                       aria-describedby="basic-addon1"
-                      onChange={(e) => setCategory(e.target.value)}
+                      onChange={(e) => setcategory(e.target.value)}
                     >
-                      <option>---Select Category---</option>
-                      {categorydata.map((item) => (
+                      <option>-Select category-</option>
+                      {catdata.map((item) => (
                         <option value={item.category}>{item.category}</option>
                       ))}
                     </Form.Select>
-                  </InputGroup> */}
-
-                  <Form.Label>
-                    Subcategory <span className="text-danger"> *</span>
-                  </Form.Label>
+                  </InputGroup>
+                  <Form.Label className="mt-3">Subcategory</Form.Label>
                   <InputGroup className="mb-2">
                     <Form.Select
                       aria-label="Username"
@@ -598,16 +783,14 @@ function Services() {
                       onChange={(e) => setSubcategory(e.target.value)}
                     >
                       <option>-Select Subcategory-</option>
-                      {categorydata.map((item) => (
+                      {postsubdata.map((item) => (
                         <option value={item.subcategory}>
                           {item.subcategory}
                         </option>
                       ))}
                     </Form.Select>
                   </InputGroup>
-                  <Form.Label>
-                    Sub-subcategory <span className="text-danger"> *</span>
-                  </Form.Label>
+                  <Form.Label className="mt-3">Sub-subcategory</Form.Label>
                   <InputGroup className="mb-2">
                     <Form.Select
                       aria-label="Username"
@@ -622,11 +805,8 @@ function Services() {
                       ))}
                     </Form.Select>
                   </InputGroup>
-                  {/* <div style={{ color: "#FF0060", textAlign: "end" }}>
-                    <i class="fa-regular fa-plus"></i>
-                    create category
-                  </div> */}
-                  <Form.Label>Service duration</Form.Label>
+
+                  <Form.Label className="mt-3">Service duration</Form.Label>
                   <InputGroup className="mb-3">
                     <Form.Control
                       aria-label="max_hrbook"
@@ -637,7 +817,9 @@ function Services() {
                     ></Form.Control>
                   </InputGroup>
 
-                  <Form.Label>Number of Servicemen </Form.Label>
+                  <Form.Label className="mt-3">
+                    Number of Servicemen{" "}
+                  </Form.Label>
                   <InputGroup className="mb-3">
                     <Form.Control
                       aria-label="maxhr"
@@ -669,8 +851,6 @@ function Services() {
                 {toggle1 ? (
                   <div>
                     <Form>
-                      <h2> Addon's</h2>
-                      <Row className="mb-3"></Row>
                       <Button
                         variant="light"
                         className="mb-3"
@@ -686,85 +866,103 @@ function Services() {
                       </Button>{" "}
                       <div
                         style={{
-                          display: "flex",
+                          // display: "flex",
                           gap: "20px",
-                          flexWrap: "wrap",
+                          // flexWrap: "wrap",
                         }}
                       >
-                        {existingData.map((i) => (
-                          <p className="slots">{i.Slots}</p>
-                        ))}
+                        <table>
+                          <tbody>
+                            {Object.entries(dataByCity).map(([city, data]) => (
+                              <tr key={city}>
+                                <td>{city}</td>
+                                <td>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                      flexWrap: "wrap",
+                                      // border:"1px solid gray",
+                                      padding: 10,
+                                      marginTop: 20,
+                                    }}
+                                  >
+                                    {data.map((item) => (
+                                      <div
+                                        key={item.id}
+                                        style={{
+                                          marginRight: "20px",
+                                          display: "flex",
+                                        }}
+                                      >
+                                        <p className="slots">
+                                          {item.startTime}
+                                        </p>
+                                        <p
+                                          style={{
+                                            backgroundColor: "lightblue",
+                                            padding: "5px",
+                                            width: "35px",
+                                          }}
+                                        >
+                                          {item.Servicesno}
+                                        </p>
+                                        <i
+                                          className="fa-solid fa-trash"
+                                          style={{
+                                            color: "red",
+                                            padding: "10px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleDeleteCity(item.id)
+                                          }
+                                        ></i>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
-                    </Form>
-
-                    <Form>
-                      {/* <h2> Plans's</h2> */}
-                      <Row className="mb-3"></Row>
                       <Button
                         variant="light"
                         className="mb-3"
                         style={{ color: "skyblue" }}
-                        onClick={handleShow1}
+                        onClick={() => handleShow3()}
                       >
                         {" "}
                         <i
                           class="fa-regular fa-plus"
                           style={{ color: "rgb(7, 170, 237)" }}
                         ></i>
-                        Add Plan and Premises
+                        Add more price
                       </Button>{" "}
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "20px",
-                          flexWrap: "wrap",
-                        }}
-                      ></div>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "20px",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {plandata.map((i) => (
-                          <p className="plans" onClick={() => handleShow2(i)}>
-                            {i.Plans}
-                          </p>
-                        ))}
-                      </div>
                       <div>
-                        {/* {plandetailsdata.map((i) => (
-                          <div
-                            style={{
-                              display: "flex",
-                              gap: "20px",
-                              flexWrap: "wrap",
-                            }}
-                          >
-                            <p className="">{i.planName}</p>
-                            <p className="">{i.premises}</p>
-                            <p className="">{i.plansPrice}</p>
-                          </div>
-                        ))} */}
                         <Table striped bordered hover>
                           <thead>
                             <tr>
+                              <th>City</th>
                               <th>PlanName</th>
-                              <th>Premises</th>
-                              <th>PlansPrice</th>
-                              <th>Desc</th>
-                              <th>Includes</th>
+                              <th>Price</th>
+                              <th>OfferPrice</th>
+                              <th>Services</th>
+                              <th>servicePeriod</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {plandetailsdata.map((i) => (
+                            {morepriceData.map((i) => (
                               <tr>
-                                <td>{i.planName}</td>
-                                <td>{i.premises}</td>
-                                <td>{i.plansPrice}</td>
-                                <td>{i.desc}</td>
-                                <td>{i.includes}</td>
+                                <td>{i.pricecity}</td>
+                                <td>{i.pName}</td>
+
+                                <td>{i.pPrice}</td>
+                                <td>{i.pofferprice}</td>
+                                <td>{i.pservices}</td>
+
+                                <th>{i.servicePeriod}</th>
                               </tr>
                             ))}
                           </tbody>
@@ -789,6 +987,7 @@ function Services() {
                   <div>
                     <Form>
                       <h1>Service Information</h1>
+
                       <Row className="mb-3">
                         {" "}
                         <Form.Group as={Col} controlId="formGridState">
@@ -806,64 +1005,205 @@ function Services() {
                             ></Form.Control>
                           </InputGroup>
                         </Form.Group>
+                        <Form.Group as={Col} controlId="formGridState">
+                          <Form.Label>For title</Form.Label>
+
+                          <InputGroup className="mb-3">
+                            <Form.Control
+                              aria-label="max_hrbook"
+                              aria-describedby="basic-addon1"
+                              type="text"
+                              placeholder="Essential"
+                              onChange={(e) => setServicetitle(e.target.value)}
+                            ></Form.Control>
+                          </InputGroup>
+                        </Form.Group>
+                        <Form.Group as={Col} controlId="formGridState">
+                          <Form.Label>For below the service </Form.Label>
+
+                          <InputGroup className="mb-3">
+                            <Form.Control
+                              aria-label="max_hrbook"
+                              aria-describedby="basic-addon1"
+                              type="text"
+                              placeholder="nearby 120 bookings"
+                              onChange={(e) => setServicebelow(e.target.value)}
+                            ></Form.Control>
+                          </InputGroup>
+                        </Form.Group>
                       </Row>
-                      <Form.Group
-                        className="mb-3"
-                        controlId="exampleForm.ControlTextarea1"
-                      >
-                        <Form.Label>
-                          Service Description{" "}
-                          <span className="text-danger"> *</span>
-                        </Form.Label>
+                      <Form.Group as={Col} controlId="formGridEmail">
+                        <Form.Label>Service Description</Form.Label>
+                        <Form.Control
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => setDesimg(e.target.files[0])}
+                        />
+                        <a>Width:20px height:20px</a>
                         <Form.Control
                           as="textarea"
                           rows={3}
-                          onChange={(e) => setServiceDesc(e.target.value)}
+                          className="mt-3"
+                          placeholder="Include description"
+                          value={newdesc}
+                          onChange={(e) => setNewdesc(e.target.value)}
                         />
-                      </Form.Group>
 
-                      <Row className="mb-2">
+                        <Button
+                          className="mt-3"
+                          variant="primary"
+                          onClick={handleAdddesc}
+                        >
+                          Add serviceDesc
+                        </Button>
+
+                        <div>
+                          {desc.map((desc1, index) => (
+                            <div
+                              key={index}
+                              style={{
+                                display: "flex",
+                                padding: 10,
+                                gap: "10px",
+                              }}
+                            >
+                              {desc1.image ? (
+                                <img
+                                  src={desc1.image}
+                                  alt={`desc ${index + 1}`}
+                                  style={{ width: "20px", height: "20px" }}
+                                />
+                              ) : (
+                                ""
+                              )}
+
+                              <p> {desc1.text}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </Form.Group>
+                      <Row className="mt-3">
                         <Form.Group as={Col} controlId="formGridEmail">
                           <Form.Label>Includes</Form.Label>
                           <Form.Control
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setInimg(e.target.files[0])}
+                          />
+                          <a>Width:20px height:20px</a>
+                          <Form.Control
                             as="textarea"
                             rows={3}
-                            onChange={(e) => setserviceIncludes(e.target.value)}
+                            className="mt-3"
+                            placeholder="Include description"
+                            value={newInclude}
+                            onChange={(e) => setNewInclude(e.target.value)}
                           />
+
+                          <Button
+                            className="mt-3"
+                            variant="primary"
+                            onClick={handleAddInclude}
+                          >
+                            Add Include
+                          </Button>
+
+                          <div>
+                            {includes.map((include, index) => (
+                              <div
+                                key={index}
+                                style={{
+                                  display: "flex",
+                                  padding: 10,
+                                  gap: "10px",
+                                }}
+                              >
+                                <img
+                                  src={include.image}
+                                  alt={`Include ${index + 1}`}
+                                  style={{ width: "20px", height: "20px" }}
+                                />
+                                <p> {include.text}</p>
+                              </div>
+                            ))}
+                          </div>
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridEmail">
                           <Form.Label>Excludes</Form.Label>
                           <Form.Control
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setEximg(e.target.files[0])}
+                          />
+                          <a>Width:20px height:20px</a>
+                          <Form.Control
                             as="textarea"
                             rows={3}
-                            onChange={(e) => setserviceExcludes(e.target.value)}
+                            className="mt-3"
+                            placeholder="Include description"
+                            value={newEncludes}
+                            onChange={(e) => setNewExclude(e.target.value)}
                           />
+
+                          <Button
+                            className="mt-3"
+                            variant="primary"
+                            onClick={handleAddExclude}
+                          >
+                            Add Excludes
+                          </Button>
+
+                          <div>
+                            {excludes.map((exclude, index) => (
+                              <div
+                                key={index}
+                                style={{
+                                  display: "flex",
+                                  padding: 10,
+                                  gap: "10px",
+                                }}
+                              >
+                                <img
+                                  src={exclude.image}
+                                  alt={`Include ${index + 1}`}
+                                  style={{ width: "20px", height: "20px" }}
+                                />
+                                <p> {exclude.text}</p>
+                              </div>
+                            ))}
+                          </div>
                         </Form.Group>
                       </Row>
-                      <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridEmail">
-                          <Form.Label>
-                            Service Price{" "}
+
+                      <Row>
+                        <Form.Group as={Col} controlId="formGridState">
+                          <Form.Label className="mt-3">
+                            Select Services redirection{" "}
                             <span className="text-danger"> *</span>
                           </Form.Label>
-                          <Form.Control
-                            type="number"
-                            name="Price"
-                            onChange={(e) => setServicePrice(e.target.value)}
-                          />
-                        </Form.Group>
 
-                        <Form.Group as={Col} controlId="formGridEmail">
-                          <Form.Label>Customer offer price</Form.Label>
-                          <Form.Control
-                            type="text"
-                            name=""
-                            onChange={(e) => setofferPrice(e.target.value)}
-                          />
+                          <InputGroup className="mb-2 col-3">
+                            <Form.Select
+                              aria-label="Username"
+                              aria-describedby="basic-addon1"
+                              onChange={(e) =>
+                                setserviceDirection(e.target.value)
+                              }
+                            >
+                              <option>-Select-</option>
+
+                              <option value="Enquiry">Enquiry</option>
+                              <option value="Survey">Survey</option>
+                              <option value="DSR">DSR single service</option>
+                              <option value="AMC">AMC Service</option>
+                            </Form.Select>
+                          </InputGroup>
                         </Form.Group>
                         <Form.Group as={Col} controlId="formGridEmail">
-                          <Form.Label>GST Percentage</Form.Label>
+                          <Form.Label className="mt-3">
+                            GST Percentage
+                          </Form.Label>
 
                           <Form.Select
                             aria-label="Username"
@@ -872,10 +1212,23 @@ function Services() {
                           >
                             <option>---Select GST---</option>
 
-                            <option value="0.05">5%</option>
-                            <option value="0.18">18%</option>
-                            <option value="0.22">22%</option>
+                            <option value="5%">5%</option>
+                            <option value="18%">18%</option>
+                            <option value="22%">22%</option>
                           </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group
+                          as={Col}
+                          controlId="formGridEmail"
+                          className="mt-3"
+                        >
+                          <Form.Label>Rating</Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="Price"
+                            onChange={(e) => setrating(e.target.value)}
+                          />
                         </Form.Group>
                       </Row>
                     </Form>
@@ -903,34 +1256,67 @@ function Services() {
           <Modal.Title>Add Slots</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form.Group as={Col} controlId="formGridEmail">
-            <Form.Label>
-              Slots <span className="text-danger"> *</span>
-            </Form.Label>
-            <Form.Control
-              type="text"
-              name="Price"
-              onChange={(e) => setSlots(e.target.value)}
-            />
-            <p style={{ marginTop: "10px", fontSize: "12px" }}>
-              <b>Example= 10AM-11AM</b>
-            </p>
+          <Form.Group as={Col} controlId="formGridState">
+            <Form.Label>Select City </Form.Label>
+
+            <InputGroup className="mb-2 col-3">
+              <Form.Select
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                onChange={(e) => setslotcity(e.target.value)}
+              >
+                <option>-Select-</option>
+                {citydata.map((i) => (
+                  <option value={i.city}>{i.city}</option>
+                ))}
+              </Form.Select>
+            </InputGroup>
           </Form.Group>
 
-          <Form.Group as={Col} controlId="formGridEmail">
-            <Form.Label>
-              Mention services number <span className="text-danger"> *</span>
-            </Form.Label>
-            <Form.Control
-              type="number"
-              name="Price"
-              placeholder="10 "
-              onChange={(e) => setServicesno(e.target.value)}
-            />
-            <p style={{ marginTop: "10px", fontSize: "12px" }}>
-              <b>Mention the services for slots Example= 10</b>
-            </p>
-          </Form.Group>
+          <div className="row">
+            <div
+              className="col-6"
+              style={{
+                marginTop: 20,
+              }}
+            >
+              <h6>StartTime</h6>
+              {slotsdata.map((item, index) => (
+                <div style={{ display: "flex" }}>
+                  <div>
+                    <input
+                      type="checkbox"
+                      id={`checkbox-${index}`} // Add a unique identifier (e.g., index) for each checkbox
+                      checked={checkboxStates[index]} // Use checkboxStates[index] for the checked state
+                      onChange={() => checkHandler(index)} // Pass the index for identifying which checkbox was changed
+                      style={{ width: "30px", height: "50px", padding: "30px" }}
+                      className="custom-checkbox"
+                    />
+                  </div>
+
+                  <div
+                    key={item.id}
+                    style={{
+                      display: "flex",
+                    }}
+                  >
+                    <p className="slots">{item.startTime}</p>
+                  </div>
+                  <input
+                    style={{ width: "80px", height: "35px" }}
+                    type="number"
+                    name="Price"
+                    value={Servicesno[index]} // Use Servicesno[index] for each row
+                    onChange={(e) => {
+                      const newServicesno = [...Servicesno];
+                      newServicesno[index] = e.target.value;
+                      setServicesno(newServicesno);
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -941,84 +1327,54 @@ function Services() {
           </Button>
         </Modal.Footer>
       </Modal>
+
       <Modal show={show1} onHide={handleClose1}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Slots</Modal.Title>
+          <Modal.Title>Add includes</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group as={Col} controlId="formGridEmail">
             <Form.Label>
-              Plan Name <span className="text-danger"> *</span>
+              Icon <span className="text-danger"> *</span>
             </Form.Label>
             <Form.Control
-              type="text"
-              name="Price"
-              onChange={(e) => setPlans(e.target.value)}
+              type="file"
+              name="icon"
+              onChange={(e) => setIcon(e.target.files[0])}
             />
-            <p style={{ marginTop: "10px", fontSize: "12px" }}>
-              <b>Example= Essential</b>
-            </p>
+          </Form.Group>
+          <Form.Group as={Col} controlId="formGridEmail" className="mt-3">
+            <Form.Label>
+              Desc <span className="text-danger"> *</span>
+            </Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={4}
+              onChange={(e) => setDesc(e.target.value)}
+            />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleSaveplans}>
+          <Button variant="primary" onClick={handleIncludes}>
             Save Changes
           </Button>
         </Modal.Footer>
       </Modal>
+
       <Modal show={show2} onHide={handleClose2}>
         <Modal.Header closeButton>
           <Modal.Title>Add</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group as={Col} controlId="formGridEmail">
-            <Form.Label>
-              Select Plans <span className="text-danger"> *</span>
-            </Form.Label>
-            <Form.Select
-              aria-label="Username"
-              aria-describedby="basic-addon1"
-              onChange={(e) => setplanName(e.target.value)}
-            >
-              <option>-Select -</option>
-              {plandata.map((item) => (
-                <option value={item.Plans}>{item.Plans}</option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-          <Form.Group as={Col} controlId="formGridEmail">
-            <Form.Label>Premises</Form.Label>
+            <Form.Label>Title Name</Form.Label>
             <Form.Control
               type="text"
               name="Price"
-              onChange={(e) => setPremises(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group as={Col} controlId="formGridEmail">
-            <Form.Label>Price</Form.Label>
-            <Form.Control
-              type="text"
-              name="Price"
-              onChange={(e) => setplansPrice(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group as={Col} controlId="formGridEmail">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              type="text"
-              name="Price"
-              onChange={(e) => setdesc(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group as={Col} controlId="formGridEmail">
-            <Form.Label>Includes</Form.Label>
-            <Form.Control
-              type="text"
-              name="Price"
-              onChange={(e) => setincludes(e.target.value)}
+              onChange={(e) => settitleName(e.target.value)}
             />
           </Form.Group>
         </Modal.Body>
@@ -1030,6 +1386,249 @@ function Services() {
             Save Changes
           </Button>
         </Modal.Footer>
+      </Modal>
+      <Modal show={show3} onHide={handleClose3}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group as={Col} controlId="formGridState">
+            <Form.Label>Select City </Form.Label>
+
+            <InputGroup className="mb-2 col-3">
+              <Form.Select
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                onChange={(e) => setpricecity(e.target.value)}
+              >
+                <option>-Select-</option>
+                {citydata.map((i) => (
+                  <option value={i.city}>{i.city}</option>
+                ))}
+              </Form.Select>
+            </InputGroup>
+          </Form.Group>
+          <Form.Group as={Col} controlId="formGridEmail">
+            <Form.Label>Plan name</Form.Label>
+            <Form.Control
+              type="text"
+              name="Price"
+              onChange={(e) => setpName(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group as={Col} controlId="formGridEmail">
+            <Form.Label>Price</Form.Label>
+            <Form.Control
+              type="text"
+              name="Price"
+              onChange={(e) => setpPrice(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group as={Col} controlId="formGridEmail">
+            <Form.Label>OfferPrice</Form.Label>
+            <Form.Control
+              type="text"
+              name="Price"
+              onChange={(e) => setpofferprice(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group as={Col} controlId="formGridEmail">
+            <Form.Label>How many services</Form.Label>
+            <Form.Control
+              type="text"
+              name="Price"
+              onChange={(e) => setpservices(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Label className="mt-3">Period frequency</Form.Label>
+
+          <InputGroup className="mb-2 col-3">
+            <Form.Select
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+              onChange={(e) => setservicePeriod(e.target.value)}
+            >
+              <option>-Select-</option>
+
+              <option value="monthly">Monthly</option>
+              <option value="quart">Quartly</option>
+              <option value="half">Half year</option>
+              <option value="year">Year</option>
+            </Form.Select>
+          </InputGroup>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleSaveplanprice}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* modal for edit */}
+      <Modal
+        show={showEdit}
+        onHide={handleClosePopup}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Service</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="card-body p-3">
+            <form>
+              <div className="col-md-12">
+                <div className="vhs-input-label">
+                  Category <span className="text-danger"> *</span>
+                </div>
+                <div className="group pt-1">
+                  {/* <input
+                    type="text"
+                    className="col-md-12 vhs-input-value"
+                    onChange={(e) => setEditCatagoryName(e.target.value)}
+                    defaultValue={
+                      editCatagoryName || editSubcategory
+                        ? editSubcategory.category
+                        : ""
+                    }
+                  /> */}
+                  <Form.Select
+                    aria-label="Username"
+                    aria-describedby="basic-addon1"
+                    onChange={(e) => setEditCatagoryName(e.target.value)}
+                  >
+                    <option>-Select category-</option>
+                    {catdata.map((item) => (
+                      <option value={item.category}>{item.category}</option>
+                    ))}
+                  </Form.Select>
+                </div>
+              </div>
+              <div className="col-md-12">
+                <div className="vhs-input-label">
+                  Subcategory <span className="text-danger"> *</span>
+                </div>
+                <div className="group pt-1">
+                  {/* <input
+                    type="text"
+                    className="col-md-12 vhs-input-value"
+                    onChange={(e) => setEditSubcategoryName(e.target.value)}
+                    defaultValue={
+                      editSubcategoryName || editSubcategory
+                        ? editSubcategory.Subcategory
+                        : ""
+                    }
+                  /> */}
+                  <Form.Select
+                    aria-label="Username"
+                    aria-describedby="basic-addon1"
+                    onChange={(e) => setEditSubcategoryName(e.target.value)}
+                  >
+                    <option>-Select Subcategory-</option>
+                    {categorydata.map((item) => (
+                      <option value={item.subcategory}>
+                        {item.subcategory}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </div>
+              </div>
+              <div className="col-md-12">
+                <div className="vhs-input-label">
+                  Sub subcategory <span className="text-danger"> *</span>
+                </div>
+                <div className="group pt-1">
+                  <Form.Select
+                    aria-label="Username"
+                    aria-describedby="basic-addon1"
+                    onChange={(e) => setEditSubCategoryList(e.target.value)}
+                  >
+                    <option>-Select Subcategory-</option>
+                    {postservicename.map((item) => (
+                      <option value={item.sub_subcategory}>
+                        {item.sub_subcategory}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </div>
+              </div>
+              <div className="col-md-12">
+                <div className="vhs-input-label">
+                  Service Name <span className="text-danger"> *</span>
+                </div>
+                <div className="group pt-1">
+                  <input
+                    type="text"
+                    className="col-md-12 vhs-input-value"
+                    onChange={(e) => setEditServiceName(e.target.value)}
+                    defaultValue={
+                      editServiceName || editSubcategory
+                        ? editSubcategory.serviceName
+                        : ""
+                    }
+                  />
+                </div>
+              </div>
+              <div className="col-md-12">
+                <div className="vhs-input-label">
+                  Service descriptions <span className="text-danger"> *</span>
+                </div>
+                <div className="group pt-1">
+                  <textarea
+                    type="text"
+                    className="col-md-12 vhs-input-value"
+                    onChange={(e) => setEditServiceDescription(e.target.value)}
+                    defaultValue={
+                      editServiceDescription || editSubcategory
+                        ? editSubcategory.text
+                        : ""
+                    }
+                  />
+                </div>
+              </div>
+              <div className="col-md-12">
+                <div className="vhs-input-label">
+                  Service Hours <span className="text-danger"> *</span>
+                </div>
+                <div className="group pt-1">
+                  <input
+                    type="time"
+                    className="col-md-12 vhs-input-value"
+                    onChange={(e) => setEditServiceHour(e.target.value)}
+                    defaultValue={
+                      editServiceHour || editSubcategory
+                        ? editSubcategory.serviceHour
+                        : ""
+                    }
+                  />
+                </div>
+              </div>
+              <div className="col-md-12">
+                <div className="vhs-input-label">
+                  Service Image <span className="text-danger"> *</span>
+                </div>
+                <div className="group pt-1">
+                  <input
+                    type="file"
+                    className="col-md-12 vhs-input-value"
+                    onChange={(e) => setEditServiceImage(e.target.files[0])}
+                  />
+                </div>
+              </div>
+
+              <div className="row pt-3">
+                <div className="col-md-2">
+                  <button className="vhs-button" onClick={updateService}>
+                    Update
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </Modal.Body>
       </Modal>
     </div>
   );

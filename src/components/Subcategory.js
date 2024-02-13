@@ -1,47 +1,60 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Table } from "react-bootstrap";
 import Sidenav from "./Sidenav";
 import Header from "./Header";
 import DataTable from "react-data-table-component";
 import Modal from "react-bootstrap/Modal";
+import Multiselect from "multiselect-react-dropdown";
 
 function Subcategory() {
-  const admin = JSON.parse(sessionStorage.getItem("admin"));
-
   const [data1, setdata1] = useState([]);
   const [category, setcategory] = useState("");
   const [subcategory, setsubcategory] = useState("");
-  const [videolink, setvideolink] = useState("");
   const [search, setsearch] = useState("");
-  const [subcatvideo, setsubcatvideo] = useState("");
+  const [ServiceData, setServiceData] = useState([]);
   const [subcategoryImg, setsubcategoryImg] = useState("");
   const [filterdata, setfilterdata] = useState([]);
   const [data, setdata] = useState([]);
-
-  const [category1, setcategory1] = useState(data.category);
-  const [subcategory1, setsubcategory1] = useState(data.subcategory);
-  const [subcatimg1, setsubimg1] = useState(data.subcatimg);
   const [subcategorydata, setsubcategorydata] = useState([]);
+  const [subcatvideo, setsubcatvideo] = useState("");
+  const [titledata, settitledata] = useState([]);
+  const [editCategory, setEditCategory] = useState("");
+  const [editSubcategory, setEditSubcategory] = useState("");
+  const [editSubcategoryImage, setEditSubcategoryImage] = useState("");
+  const [editSubcategoryVideo, setEditSubcategoryVideo] = useState("");
+  const [edithomePagetitle, setedithomePagetitle] = useState("");
+  const [editSubcategoryData, setEditSubcategoryData] = useState({});
+  const [othservice, setothservice] = useState([]);
+  const [othservice1, setothservice1] = useState(
+    editSubcategoryData?.othservice || []
+  );
+
+  const [homePagetitle, sethomePagetitle] = useState("");
+
   const formdata = new FormData();
-  const apiURL = process.env.REACT_APP_API_URL;
 
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handleEdit = (subcategory) => {
+    setEditSubcategoryData(subcategory);
+    handleShow(true);
+  };
+
   useEffect(() => {
     getcategory();
     getsubcategory();
   }, []);
 
   const getcategory = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/getcategory");
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/getcategory");
     if ((res.status = 200)) {
       setdata1(res.data?.category);
-      console.log(res.data?.category);
     }
   };
+
   const postsubcategory = async (e) => {
     e.preventDefault();
 
@@ -52,13 +65,19 @@ function Subcategory() {
       formdata.append("subcategory", subcategory);
       formdata.append("subcatimg", subcategoryImg);
       formdata.append("subcatvideo", subcatvideo);
+      formdata.append("homePagetitle", homePagetitle);
+      formdata.append("othservice", JSON.stringify(othservice));
 
+      console.log("formdata", formdata);
       try {
         const config = {
-          url: "http://api.vijayhomeservicebengaluru.in/api/userapp/addappsubcat",
+          url: "/userapp/addappsubcat",
           method: "post",
-          // baseURL: "",
+          baseURL: "https://api.vijayhomesuperadmin.in/api",
           data: formdata,
+          headers: {
+            "Content-Type": "multipart/form-data", // Important for file uploads
+          },
         };
         await axios(config).then(function (response) {
           if (response.status === 200) {
@@ -84,40 +103,56 @@ function Subcategory() {
       }
     }
   };
+
+  const onupdate = () => {
+    getsubcategory();
+  };
+
   const getsubcategory = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/userapp/getappsubcat");
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/getappsubcat");
     if ((res.status = 200)) {
       console.log(res);
       setsubcategorydata(res.data?.subcategory);
       setfilterdata(res.data?.subcategory);
     }
   };
+  // const otgerServiceNAME = othservice1.Map(e =>e.name)
 
   const editservices = async (e) => {
     e.preventDefault();
     try {
+      formdata.append("category", editCategory);
+      formdata.append("subcategory", editSubcategory);
+      formdata.append("homePagetitle", edithomePagetitle);
+      formdata.append("othservice", JSON.stringify(othservice1));
+      if (editSubcategoryImage) {
+        formdata.append("subcatimg", editSubcategoryImage);
+      }
+      if (editSubcategoryVideo) {
+        formdata.append("subcatvideo", editSubcategoryVideo);
+      }
+
       const config = {
-        url: `/userapp/editappsubcat/${data._id}`,
+        url: `/userapp/editappsubcat/${editSubcategoryData._id}`,
         method: "post",
-        baseURL: "http://api.vijayhomeservicebengaluru.in/api",
-        headers: { "content-type": "application/json" },
-        data: {
-          category: category1,
-          subcategory: subcategory1,
-          subcatimg: subcatimg1,
-        },
+        baseURL: "https://api.vijayhomesuperadmin.in/api",
+        headers: { "Content-Type": "multipart/form-data" },
+        data: formdata,
       };
       await axios(config).then(function (response) {
         if (response.status === 200) {
           alert("Successfully Added");
           window.location.reload("");
+          // onupdate();
+          // handleClose();
         }
       });
     } catch (error) {
       console.error(error);
-      alert(" Not Added");
+      alert("Not Added");
     }
   };
+
   const columns = [
     {
       name: "Sl  No",
@@ -132,12 +167,16 @@ function Subcategory() {
       selector: (row) => row.subcategory,
     },
     {
+      name: "Home Page Title  ",
+      selector: (row) => row.homePagetitle,
+    },
+    {
       name: "Subcategory image",
       cell: (row) => (
         <div>
           <img
             className="header_logo"
-            src={`http://api.vijayhomeservicebengaluru.in/subcat/${row.subcatimg}`}
+            src={`https://api.vijayhomesuperadmin.in/subcat/${row.subcatimg}`}
             width={"50px"}
             height={"50px"}
           />
@@ -148,10 +187,9 @@ function Subcategory() {
       name: "Subcategory video",
       cell: (row) => (
         <div>
-         
-          <video width="250" height="150" controls>
+          <video width="150" height="150" controls>
             <source
-              src={`http://api.vijayhomeservicebengaluru.in/subcat/${row.subcatvideo}`}
+              src={`https://api.vijayhomesuperadmin.in/subcat/${row.subcatvideo}`}
               type="video/mp4"
             />
           </video>
@@ -162,7 +200,11 @@ function Subcategory() {
       name: "Action",
       cell: (row) => (
         <div>
-          <a className="hyperlink" onClick={() => edit(row)}>
+          <a
+            className="hyperlink"
+            style={{ cursor: "pointer" }}
+            onClick={() => handleEdit(row)}
+          >
             Edit |
           </a>
           <a onClick={() => deleteservices(row._id)} className="hyperlink mx-1">
@@ -173,22 +215,17 @@ function Subcategory() {
     },
   ];
 
-  const edit = (data) => {
-    setdata(data);
-    handleShow(true);
-  };
   useEffect(() => {
     const result = subcategorydata.filter((item) => {
       return item.category.toLowerCase().match(search.toLowerCase());
     });
     setfilterdata(result);
   }, [search]);
-  let i = 0;
 
   const deleteservices = async (id) => {
     axios({
       method: "post",
-      url: apiURL + "/userapp/deleteappsubcat/" + id,
+      url: "https://api.vijayhomesuperadmin.in/api/userapp/deleteappsubcat/" + id,
     })
       .then(function (response) {
         //handle success
@@ -201,6 +238,82 @@ function Subcategory() {
         console.log(error.response.data);
       });
   };
+
+  useEffect(() => {
+    gettitle();
+  }, []);
+
+  const gettitle = async () => {
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/gettitle");
+    if ((res.status = 200)) {
+      settitledata(res.data?.homepagetitle);
+    }
+  };
+
+  useEffect(() => {
+    getServiceByCategory();
+  }, [category]);
+
+  const getServiceByCategory = async () => {
+    try {
+      let res = await axios.post(
+        `https://api.vijayhomesuperadmin.in/api/userapp/getservicebycategory/`,
+        {
+          category,
+        }
+      );
+      if (res.status === 200) {
+        setServiceData(res.data?.serviceData);
+      } else {
+        setServiceData([]);
+      }
+    } catch (error) {
+      console.log("err", error);
+    }
+  };
+
+  const [ServiceData1, setServiceData1] = useState([]);
+  useEffect(() => {
+    getServiceByCategory1();
+  }, [editCategory, editSubcategoryData, show]);
+
+  const getServiceByCategory1 = async () => {
+    try {
+      let res = await axios.post(
+        `https://api.vijayhomesuperadmin.in/api/userapp/getservicebycategory/`,
+        {
+          category: editSubcategoryData.category,
+        }
+      );
+      if (res.status === 200) {
+        setServiceData1(res.data?.serviceData);
+      } else {
+        setServiceData1([]);
+      }
+    } catch (error) {
+      console.log("err", error);
+    }
+  };
+
+  const onSelectCatagory = (selectedList, selectedItem) => {
+    // Handle select event
+    setothservice(selectedList);
+  };
+
+  const onEditCatagory = (selectedList, selectedItem) => {
+    setothservice1(selectedList);
+  };
+
+  const onRemoveCatagory = (selectedList, removedItem) => {
+    // Handle remove event
+    setothservice(selectedList);
+  };
+
+  console.log(
+    "editSubcategoryData?.othservice ",
+    editSubcategoryData?.othservice
+  );
+
   return (
     <div div className="row">
       <div className="col-md-2">
@@ -255,22 +368,61 @@ function Subcategory() {
                           className="col-md-12 vhs-input-value"
                           onChange={(e) => setsubcategoryImg(e.target.files[0])}
                         />
-                          <p style={{fontSize:"12px"}}><b>Width:50px ,Height:50px</b></p>
+                        <p style={{ fontSize: "12px" }}>
+                          <b>Width:50px, Height:50px </b>
+                        </p>
+                        <p style={{ fontSize: "12px" }}>
+                          <b>format(jpg,png)</b>
+                        </p>
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-4 mt-4">
-                    <div className="vhs-input-label">Subcategory Video</div>
-                    <div className="group pt-1">
-                      <input
-                        type="file"
-                        accept="video/*"
-                        className="col-md-12 vhs-input-value"
-                        onChange={(e) => setsubcatvideo(e.target.files[0])}
-                      />
+                  <div className="row">
+                    <div className="col-md-4 mt-4">
+                      <div className="vhs-input-label">Subcategory Video</div>
+                      <div className="group pt-1">
+                        <input
+                          type="file"
+                          accept="video/*"
+                          className="col-md-12 vhs-input-value"
+                          onChange={(e) => setsubcatvideo(e.target.files[0])}
+                        />
+                      </div>
+                      <p className="mt-2">
+                        {" "}
+                        <b>
+                          Note:Width= 400px ,Height:200px and mp4 format
+                        </b>{" "}
+                      </p>
                     </div>
-                    <p className="mt-2">         <b>Note:Width= 400px ,Height:200px and mp4 format</b> </p>
-            
+                    <div className="col-md-4 mt-4">
+                      <div className="vhs-input-label">Home page title</div>
+                      <div className="group pt-1">
+                        <select
+                          className="col-md-12 vhs-input-value"
+                          onChange={(e) => sethomePagetitle(e.target.value)}
+                        >
+                          <option>---SELECT---</option>
+                          {titledata.map((i) => (
+                            <option value={i.title}>{i.title}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col-md-4 mt-4">
+                      <Multiselect
+                        className="mt-3"
+                        options={ServiceData.map((item) => ({
+                          name: item.serviceName,
+                        }))}
+                        defaultValue="Select Catagory"
+                        selectedValues={othservice}
+                        onSelect={onSelectCatagory}
+                        onRemove={onRemoveCatagory}
+                        displayValue="name"
+                        showCheckbox={true}
+                      />{" "}
+                    </div>
                   </div>
                   <div className="row pt-3 justify-content-center">
                     <div className="col-md-2">
@@ -305,6 +457,8 @@ function Subcategory() {
             </div>
           </div>
         </div>
+
+        {/* edit subcategory */}
         <Modal
           show={show}
           onHide={handleClose}
@@ -312,7 +466,7 @@ function Subcategory() {
           keyboard={false}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Category</Modal.Title>
+            <Modal.Title>Edit Subcategory</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="card-body p-3">
@@ -325,11 +479,13 @@ function Subcategory() {
                     <div className="group pt-1">
                       <select
                         className="col-md-12 vhs-input-value"
-                        onChange={(e) => setcategory1(e.target.value)}
+                        onChange={(e) => setEditCategory(e.target.value)}
+                        defaultValue={editSubcategoryData.category}
                       >
-                        <option value={data.category}>{data.category}</option>
                         {data1.map((item) => (
-                          <option value={item.category}>{item.category}</option>
+                          <option key={item.id} value={item.id}>
+                            {item.category}
+                          </option>
                         ))}
                       </select>
                     </div>
@@ -337,31 +493,80 @@ function Subcategory() {
                 </div>
                 <div className="col-md-12 mt-4">
                   <div className="vhs-input-label">
-                    Service name <span className="text-danger"> *</span>
+                    Subcategory name <span className="text-danger"> *</span>
                   </div>
                   <div className="group pt-1">
                     <input
                       type="text"
                       className="col-md-12 vhs-input-value"
-                      onChange={(e) => setsubcategory1(e.target.value)}
-                      placeholder={data.subcategory}
+                      onChange={(e) => setEditSubcategory(e.target.value)}
+                      // placeholder={data.subcategory}
+                      defaultValue={
+                        editSubcategory || editSubcategoryData
+                          ? editSubcategoryData.subcategory
+                          : ""
+                      }
                     />
                   </div>
                 </div>
                 <div className="col-md-12 m-4">
                   <div className="vhs-input-label">
-                    Subcategory image <span className="text-danger"> *</span>
+                    Subcategory image <span className="text-danger">*</span>
                   </div>
                   <div className="group pt-1">
                     <input
                       type="file"
                       className="col-md-12 vhs-input-value"
-                      onChange={(e) => setsubimg1(e.target.files[0])}
-                 
+                      onChange={(e) =>
+                        setEditSubcategoryImage(e.target.files[0])
+                      }
                     />
+                    <p style={{ fontSize: "12px" }}>
+                      <b>format(jpg,png)</b>
+                    </p>
                   </div>
                 </div>
 
+                <div className="col-md-12 m-4">
+                  <div className="vhs-input-label">
+                    Subcategory Video <span className="text-danger"> *</span>
+                  </div>
+
+                  <input
+                    type="file"
+                    accept="video/*"
+                    className="col-md-12 vhs-input-value"
+                    onChange={(e) => setEditSubcategoryVideo(e.target.files[0])}
+                  />
+                </div>
+                <div className="col-md-12 mt-4">
+                  <div className="vhs-input-label">Home page title</div>
+                  <div className="group pt-12">
+                    <select
+                      className="col-md-12 vhs-input-value"
+                      onChange={(e) => setedithomePagetitle(e.target.value)}
+                      defaultValue={editSubcategoryData?.homePagetitle}
+                    >
+                      <option>---SELECT---</option>
+                      {titledata.map((i) => (
+                        <option value={i.title}>{i.title}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="col-md-12 mt-4">
+                  <Multiselect
+                    className="mt-3"
+                    options={ServiceData1.map((item) => ({
+                      name: item.serviceName,
+                    }))}
+                    selectedValues={editSubcategoryData?.othservice}
+                    onSelect={onEditCatagory}
+                    onRemove={onRemoveCatagory}
+                    displayValue="name"
+                    showCheckbox={true}
+                  />
+                </div>
                 <div className="row pt-3">
                   <div className="col-md-2">
                     <button className="vhs-button" onClick={editservices}>

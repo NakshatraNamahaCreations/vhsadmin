@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 
@@ -19,14 +20,23 @@ function Login() {
       const config = {
         url: "/super/loginSuperAdmin",
         method: "post",
-        baseURL: "http://api.vijayhomeservicebengaluru.in/api",
+        baseURL: "https://api.vijayhomesuperadmin.in/api",
         headers: { "content-type": "application/json" },
         data: { emailorphone: emailOrName, password: password },
       };
       await axios(config).then(function (response) {
         if (response.status === 200) {
-          alert("Login Success");
-          sessionStorage.setItem("admin", JSON.stringify(response.data.user));
+          toast("🦄 Login succesfull", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          localStorage.setItem("admin", JSON.stringify(response.data.user));
 
           window.location.assign("/home");
         } else {
@@ -35,7 +45,16 @@ function Login() {
         }
       });
     } catch (error) {
-      alert("Invalid email and password");
+      toast.error("Invalid email or password", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
@@ -46,8 +65,8 @@ function Login() {
         style={{ alignItems: "center", height: "100vh" }}
       >
         <div className="col-10" style={{ marginTop: "" }}>
-          <div style={{ display: "flex",justifyContent:"center" }}>
-           
+          <ToastContainer position="top-right" />
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <div style={{}} className="">
               <h1
                 style={{
@@ -63,7 +82,7 @@ function Login() {
                   boxShadow: "0px 0px 5px 1px lightgray",
                   backgroundColor: "rgb(232, 232, 232)",
                   padding: 50,
-                  width:600
+                  width: 600,
                 }}
               >
                 <div>
@@ -72,7 +91,7 @@ function Login() {
                       textAlign: "center",
                     }}
                   >
-                    <img src="/images/vhs.png" style={{ width: "80px" }} />
+                    {/* <img src="/images/vhs.png" style={{ width: "80px" }} /> */}
 
                     <h4 className="mt-3">LOGIN TO YOUR ACCOUNT</h4>
                   </div>

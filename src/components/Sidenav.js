@@ -13,7 +13,7 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 
 function Sidenav() {
-  const admin = JSON.parse(sessionStorage.getItem("admin"));
+  const admin = JSON.parse(localStorage.getItem("admin"));
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -25,7 +25,7 @@ function Sidenav() {
       const config = {
         url: `/super/logout/${admin?._id}`,
         method: "post",
-        baseURL: "http://api.vijayhomeservicebengaluru.in/api",
+        baseURL: "https://api.vijayhomesuperadmin.in/api",
         headers: { "content-type": "application/json" },
         data: {},
       };
@@ -34,7 +34,7 @@ function Sidenav() {
           alert("Signout succesfully");
 
           window.location.assign("/");
-          sessionStorage.removeItem("admin");
+          localStorage.removeItem("admin");
         } else {
           // alert(data.response);
           alert(response.data.error);
@@ -48,11 +48,11 @@ function Sidenav() {
     <div>
       <ProSidebar>
         <div className="row justify-content-center mt-2">
-          <img
+          {/* <img
             src="/images/vhs.png"
             className="img-fluid"
             style={{ width: "100px" }}
-          />
+          /> */}
           <h6
             className="text-center pt-1"
             style={{ color: "black", fontWeight: "bold", fontSize: "21px" }}
@@ -62,15 +62,55 @@ function Sidenav() {
         </div>
         <Menu iconShape="square">
           <MenuItem>
-            {/* <i className="fa-solid fa-gauge"></i> */}
             Dashboard <Link to="/home" />
           </MenuItem>
+
+          <SubMenu title="Banners">
+            <MenuItem>
+              First Slider <Link to="/banner" />
+            </MenuItem>
+            <MenuItem>
+              Spotlight Banner
+              <Link to="/spotlight" />
+            </MenuItem>
+            <MenuItem>
+              Website Banners
+              <Link to="/websitebanner" />
+            </MenuItem>
+            <MenuItem>
+            Middle service  Spotlight Banners
+              <Link to="/spotlightSP" />
+            </MenuItem>
+            <MenuItem>
+            offerAnnouncement
+              <Link to="/offerAnnouncement" />
+            </MenuItem>
+          </SubMenu>
+
+          <SubMenu title="User App">
+            <MenuItem>
+              Home Page Title <Link to="/homepagetitle" />
+            </MenuItem>
+            <MenuItem>
+              Slots
+              <Link to="/slots" />
+            </MenuItem>
+            <MenuItem>
+              WHy need vhs
+              {/* WHy need */}
+              <Link to="/feq" />
+            </MenuItem>
+            <MenuItem>
+              XO
+              <Link to="/exclusivebanner" />
+            </MenuItem>
+            <MenuItem>
+              Whatsapp and Phone
+              <Link to="/whatsappandphonenumber" />
+            </MenuItem>
+          </SubMenu>
+
           <MenuItem>
-            {/* <i className="fa-solid fa-gauge"></i> */}
-            Banner <Link to="/banner" />
-          </MenuItem>
-          <MenuItem>
-            {/* <i class="fa-solid fa-users"></i> */}
             User Management <Link to="/userManagement" />
           </MenuItem>
           <SubMenu title="Category Management">
@@ -85,41 +125,40 @@ function Sidenav() {
               Sub-subcategory <Link to="/CreateSubcategory" />
             </MenuItem>
           </SubMenu>
-          <MenuItem>
-            {/* <i class="fa-solid fa-wrench"></i>  */}
-            Services Management <Link to="/Service" />
-          </MenuItem>
-          {/* <span> <i class="fa-solid fa-book"></i></span> */}
-          {/* <SubMenu title="Services Booking"> */}
+          <SubMenu title="Services Management">
+            <MenuItem>
+              Add Service <Link to="/Service" />
+            </MenuItem>
+            <MenuItem>
+              Service Add-on's
+              <Link to="/service-add-ons" />
+            </MenuItem>
+          </SubMenu>
+
           <MenuItem>
             Services Booking
             <Link to="/ServiceBooking" />
           </MenuItem>
 
-          {/* <MenuItem>
-            Subcategory <Link to="/SSubcategory" />
-          </MenuItem> */}
-          {/* </SubMenu> */}
+          <SubMenu title="Voucher and Discount">
+            <MenuItem>
+              Voucher <Link to="/voucher" />
+            </MenuItem>
+            <MenuItem>
+              Offer Banner
+              <Link to="/offerbanner" />
+            </MenuItem>
+          </SubMenu>
 
           <MenuItem>
-            Voucher and Discount <Link to="/voucher" />
-          </MenuItem>
-          <MenuItem>
-            Payments and Reports
+            Payment Reports
             <Link to="/Paymentsreports" />
           </MenuItem>
-          {/* <MenuItem>
-          Review Management <Link to="/review" />{" "}
-        </MenuItem> */}
-          {/* <MenuItem>
-          Content <Link to="/content" />
-        </MenuItem> */}
+
           <MenuItem>
             Vendors Management <Link to="/vendor" />
           </MenuItem>
-          {/* <MenuItem>
-          wallet <Link to="/Wallets" />{" "}
-        </MenuItem> */}
+
           <MenuItem>
             Settings <Link to="/settings" />{" "}
           </MenuItem>
@@ -131,9 +170,6 @@ function Sidenav() {
 
       <div>
         <Modal show={show} onHide={handleClose}>
-          {/* <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header> */}
           <Modal.Body style={{ fontSize: "20px", textAlign: "center" }}>
             Are you sure you wnat to logout
           </Modal.Body>

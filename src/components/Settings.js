@@ -7,8 +7,8 @@ function Settings() {
   const [oldPassword, setoldPassword] = useState("");
   const [newPassword, setnewPassword] = useState("");
   const [newcPassword, setnewcPassword] = useState("");
-  const admin=JSON.parse(sessionStorage.getItem("admin"));
-  console.log(admin)
+  const admin = JSON.parse(sessionStorage.getItem("admin"));
+  console.log(admin);
 
   const changePassword = async (e) => {
     e.preventDefault();
@@ -16,7 +16,7 @@ function Settings() {
       const config = {
         url: `/super/changepassword/${admin?._id}`,
         method: "post",
-        baseURL: "http://api.vijayhomeservicebengaluru.in/api",
+        baseURL: "https://api.vijayhomesuperadmin.in/api",
         headers: { "content-type": "application/json" },
         data: {
           oldPassword: oldPassword,

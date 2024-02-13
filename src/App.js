@@ -4,6 +4,7 @@ import {
   Route,
   Routes,
   BrowserRouter,
+  Navigate
 } from "react-router-dom";
 
 import Dashboard from "./components/Dashboard";
@@ -26,14 +27,31 @@ import CreateSubcategory from "./components/CreateSubcategory";
 import Createcategory from "./components/Createcategory";
 import Banner from "./components/Banner";
 import Category from "./components/Category";
-import Subcategory from "./components/Subcategory"
+import Subcategory from "./components/Subcategory";
 import Servicedetails from "./components/Servicedetails";
 import Vendordetails from "./components/Vendordetails";
+import Offerbanner from "./components/Offerbanner";
+import Spotlight from "./components/Spotlight";
+import Homepagebanner from "./components/Homepagebanner";
+import Homepagetitle from "./components/Homepagetiltle";
+import Slots from "./components/Slots";
+import FEQ from "./components/FEQ";
+import ServiceAddOns from "./components/ServiceAddOns";
+import WhatsappAndPhone from "./components/WhatsappAndPhone";
+import WebsiteBanner from "./components/WebsiteBanner"
+import EXBanner from "./components/EXbanner";
+import SpotlightSP from "./components/SpotlightSP";
+import OfferAnnouncement from "./components/OfferAnnouncement";
 
 function App() {
+  const admin=localStorage.getItem("admin");
+
   return (
     <BrowserRouter>
       <Routes>
+      {admin ? 
+          <>
+
         <Route path="/home" element={<Dashboard />} />
         <Route path="/banner" element={<Banner />} />
         <Route path="/CreateSubcategory" element={<CreateSubcategory />} />
@@ -42,6 +60,8 @@ function App() {
         <Route path="/Paymentsreports" element={<Paymentsreports />} />
         <Route path="/vendor" element={<Vendor />} />
         <Route path="/Service" element={<Service />} />
+        <Route path="/service-add-ons" element={<ServiceAddOns />} />
+        <Route path="/whatsappandphonenumber" element={<WhatsappAndPhone />} />
         <Route path="/UserManagement" element={<UserManagement />} />
         <Route path="/Wallets" element={<Wallets />} />
         <Route path="/product" element={<Product />} />
@@ -50,14 +70,31 @@ function App() {
         <Route path="/review" element={<Review />} />
         <Route path="/category" element={<Category />} />
         <Route path="/subcategory" element={<Subcategory />} />
-      
+        <Route path="/offerbanner" element={<Offerbanner />} />
+        <Route path="/spotlight" element={<Spotlight />} />
+        <Route path="/homepagetitle" element={<Homepagetitle />} />
+        <Route path="/slots" element={<Slots />} />
+        <Route path="/homepagebanner" element={<Homepagebanner />} />
+        <Route path="/websitebanner" element={<WebsiteBanner />} />
+        <Route path="/exclusivebanner" element={<EXBanner />} />
+        <Route path="/spotlightSP" element={<SpotlightSP />} />
+        <Route path="/offerAnnouncement" element={<OfferAnnouncement />} />
+
         <Route path="/servicedetails/:id" element={<Servicedetails />} />
         <Route path="/vendordetails/:id" element={<Vendordetails />} />
+        <Route path="/feq" element={<FEQ />} />
 
-        {/* <Route path="/Content" element={<Content />} /> */}
+     
         <Route path="/settings" element={<Settings />} />
         <Route path="/Sidenav" element={<Sidenav />} />
         <Route path="/Signup" element={<Signup />} />
+        </>: (
+         
+          <Route
+          path="/*"
+          element={<Navigate to="/" replace={true} />}
+        />
+        )}
         <Route path="/" element={<Login />} />
       </Routes>
       {/* </Sidebar> */}

@@ -1,10 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidenav from "./Sidenav";
 import Header from "./Header";
-import Button from "react-bootstrap/Button";
+import { useContext } from "react";
+import { CreateToggle } from "./TogglerProvider";
+import axios from "axios";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "rgb(176, 39, 39)",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 function Paymentsreports() {
+  const { light } = useContext(CreateToggle);
 
+  const [userdata, setuserdata] = useState([]);
+  const [Servicedata, setServicedata] = useState([]);
+  const [paymentdata, setpaymentdata] = useState([]);
+  const [displayedRows, setDisplayedRows] = useState(5);
+  const showAllRows = () => {
+    setDisplayedRows(paymentdata.length);
+  };
+  const showFewerRows = () => {
+    setDisplayedRows(5);
+  };
+
+  const formatdate = (fdate) => {
+    const date = new Date(fdate);
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+
+    const formattedDate = `${day}/${month}/${year}`;
+    return formattedDate;
+  };
+  useEffect(() => {
+    getapppauyments();
+  }, []);
+
+  const getapppauyments = async () => {
+    let res = await axios.get(
+      "https://api.vijayhomesuperadmin.in/api/payment/service/paywithuserdata"
+    );
+    if ((res.status = 200)) {
+      setpaymentdata(res.data?.userdata);
+    }
+  };
 
   return (
     <div className="row">
@@ -14,64 +77,86 @@ function Paymentsreports() {
       <div className="col-md-10">
         <Header />
 
-        <div className="row " style={{ marginLeft: "-72px" }}>
-          <div className="col-md-12 mt-5">
-            <table class="table table-hover table-bordered ">
-              <thead>
-                <tr className="table-secondary">
-                  <th className="table-head" scope="col">
-                    S.No
-                  </th>
-                  <th className="table-head" scope="col">
-                    Customer Name
-                  </th>
-                  <th className="table-head" scope="col">
-                    Customer Address
-                  </th>
-                  <th className="table-head" scope="col">
-                    Service Type
-                  </th>
-                  <th className="table-head" scope="col">
-                    Order Date
-                  </th>
-                  <th className="table-head" scope="col">
-                    End date
-                  </th>
-                  <th scope="col" className="table-head">
-                    Service Price
-                  </th>
-
-                  <th scope="col" className="table-head">
-                    Offer
-                  </th>
-
-                  <th scope="col" className="table-head">
-                    Payment Status
-                  </th>
-                  <th scope="col" className="table-head">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="user-tbale-body text-center">
-                  <td>1</td>
-                  <td>Salman Blr VV</td>
-                  <td>Banglore R.T.Nagar</td>
-                  <td>Home cleaning</td>
-                  <td>14-04-2023</td>
-                  <td>05-06-2023</td>
-                  <td>1000</td>
-                  <td>10%</td>
-                  <td>Paid</td>
-                  <td>
-                  <Button variant="success">Edit</Button>{" "}
-                    <Button variant="danger">Delete</Button>{" "}
-                  </td>
-                </tr>
-              </tbody>
-            </table>{" "}
+        <div>
+          <div style={{}}>
+            <h3>Transctions List</h3>
           </div>
+          {displayedRows < paymentdata.length ? (
+            <div>
+              <button
+                onClick={showAllRows}
+                style={{
+                  float: "right",
+                  background: "darkred",
+                  color: "white",
+                }}
+              >
+                Show All
+              </button>
+            </div>
+          ) : (
+            <div>
+              <button
+                onClick={showFewerRows}
+                style={{
+                  float: "right",
+                  background: "darkred",
+                  color: "white",
+                }}
+              >
+                Show less
+              </button>
+            </div>
+          )}
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Sl.No</StyledTableCell>
+                  <StyledTableCell>Transcation ID</StyledTableCell>
+                  <StyledTableCell align="right">Customer Name</StyledTableCell>
+                  <StyledTableCell align="right">
+                    Customer Number
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    Customer Email
+                  </StyledTableCell>
+                  <StyledTableCell align="right">Date</StyledTableCell>
+                  <StyledTableCell align="right">Amount</StyledTableCell>
+                  <StyledTableCell align="right">Status</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paymentdata.slice(0, displayedRows).map((i, index) => (
+                  <StyledTableRow key={i.data?.transactionId}>
+                    <StyledTableCell component="th" scope="row">
+                      {index + 1}
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
+                      {i.data?.transactionId}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {i?.userdata[0]?.customerName}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {i?.userdata[0]?.mainContact}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {i?.userdata[0]?.email}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {formatdate(i.createdAt)}
+                    </StyledTableCell>
+
+                    <StyledTableCell align="right">
+                      {i.data?.amount / 100}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">Paid</StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       </div>
     </div>

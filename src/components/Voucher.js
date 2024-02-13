@@ -28,6 +28,8 @@ function Voucher() {
   const [startDate, setstartDate] = useState("");
   const [expDate, setexpDate] = useState("");
   const [desc, setdesc] = useState("");
+  const [htuse, sethtuse] = useState("");
+
   const [voucherdata, setvoucherdata] = useState([]);
 
   const addvoucher = async (e) => {
@@ -38,8 +40,7 @@ function Voucher() {
       !discountPercentage ||
       !startDate ||
       !expDate ||
-      !desc 
-     
+      !desc
     ) {
       alert("Please fill all the fields");
     } else {
@@ -47,7 +48,7 @@ function Voucher() {
         const config = {
           url: "/userapp/addvoucher",
           method: "post",
-          baseURL: "http://api.vijayhomeservicebengaluru.in/api",
+          baseURL: "https://api.vijayhomesuperadmin.in/api",
           headers: { "content-type": "application/json" },
           data: {
             category: category,
@@ -56,16 +57,15 @@ function Voucher() {
             startDate: startDate,
             expDate: expDate,
             desc: desc,
-           
+            htuse: htuse,
           },
         };
         const response = await axios(config);
-        
+
         if (response.status === 200) {
           console.log("success");
           alert("Added");
-         window.location.reload();
-          
+          window.location.reload();
         }
       } catch (error) {
         console.error(error);
@@ -84,18 +84,33 @@ function Voucher() {
   }, []);
 
   const getcategory = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/getcategory");
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/getcategory");
     if ((res.status = 200)) {
       setcategorydata(res.data?.category);
     }
   };
- 
 
   const getvoucher = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/userapp/getvoucher");
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/getvoucher");
     if ((res.status = 200)) {
       setvoucherdata(res.data?.voucher);
     }
+  };
+  const deletevoucher = async (id) => {
+    axios({
+      method: "post",
+      url: "https://api.vijayhomesuperadmin.in/api/userapp/deletevoucher/" + id,
+    })
+      .then(function (response) {
+        //handle success
+        console.log(response);
+        alert("Deleted successfully");
+        window.location.reload();
+      })
+      .catch(function (error) {
+        //handle error
+        console.log(error.response.data);
+      });
   };
   return (
     <div className="row">
@@ -105,7 +120,7 @@ function Voucher() {
       <div className="col-md-10">
         <Header />
 
-        <div className="d-flex float-end  mb-3">
+        <div className="d-flex float-end mt-4 mb-3">
           <button
             className="btn-primary-button mx-2"
             style={selected == 1 ? active : inactive}
@@ -123,7 +138,7 @@ function Voucher() {
           </button>
         </div>
 
-        <div className="row w-100" style={{ marginLeft: "-32px" }}>
+        <div className="row w-100">
           <div className="col-md-12">
             {selected == 0 ? (
               <>
@@ -147,30 +162,35 @@ function Voucher() {
                       <th className="table-head" scope="col">
                         Discount Percentage
                       </th>
-                    
+                      <th className="table-head" scope="col">
+                        How may time use
+                      </th>
                       <th className="table-head" scope="col">
                         Start Date
                       </th>
                       <th className="table-head" scope="col">
                         Exp date
                       </th>
+                      <th className="table-head" scope="col">
+                        Action
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {voucherdata.map((i,index)=>(
+                    {voucherdata.map((i, index) => (
+                      <tr className="user-tbale-body">
+                        <td className="text-center">{index + 1}</td>
+                        <td>{i.category}</td>
+                        <td className="text-center">{i.voucherCode}</td>
+                        <td className="text-center">{i.desc}</td>
+                        <td className="text-center">{i.discountPercentage}</td>
+                        <td className="text-center">{i.htuse}</td>
 
-                   
-                    <tr className="user-tbale-body">
-                      <td className="text-center">{index+1}</td>
-                      <td>{i.category}</td>
-                      <td className="text-center">{i.voucherCode}</td>
-                      <td className="text-center">{i.desc}</td>
-                      <td className="text-center">{i.discountPercentage}</td>
-                    
-                      <td className="text-center">{i.startDate}</td>
-                      <td>{i.expDate}</td>
-                    </tr>
-                     ))}
+                        <td className="text-center">{i.startDate}</td>
+                        <td>{i.expDate}</td>
+                        <td onClick={() => deletevoucher(i._id)}>Delete</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>{" "}
               </>
@@ -185,19 +205,30 @@ function Voucher() {
                       <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridEmail">
                           <Form.Label> Voucher Code</Form.Label>
-                          <Form.Control placeholder=" Voucher code "  onChange={(e)=>setvoucherCode(e.target.value)}/>
+                          <Form.Control
+                            placeholder=" Voucher code "
+                            onChange={(e) => setvoucherCode(e.target.value)}
+                          />
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridEmail">
                           <Form.Label> Description</Form.Label>
-                          <Form.Control placeholder=" Description "  onChange={(e)=>setdesc(e.target.value)} />
+                          <Form.Control
+                            placeholder=" Description "
+                            onChange={(e) => setdesc(e.target.value)}
+                          />
                         </Form.Group>
                       </Row>
 
                       <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridEmail">
                           <Form.Label> Discount Percentage</Form.Label>
-                          <Form.Control placeholder=" Discount " onChange={(e)=>setdiscountPercentage(e.target.value)} />
+                          <Form.Control
+                            placeholder=" Discount "
+                            onChange={(e) =>
+                              setdiscountPercentage(e.target.value)
+                            }
+                          />
                           <b>(Example=10)</b>
                         </Form.Group>
 
@@ -225,18 +256,44 @@ function Voucher() {
                           <Form.Control
                             placeholder=" start date "
                             type="date"
-                            onChange={(e)=>setstartDate(e.target.value)}
+                            onChange={(e) => setstartDate(e.target.value)}
                           />
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridEmail">
                           <Form.Label>Validity till</Form.Label>
-                          <Form.Control placeholder=" validity " type="date"  onChange={(e)=>setexpDate(e.target.value)}/>
+                          <Form.Control
+                            placeholder=" validity "
+                            type="date"
+                            onChange={(e) => setexpDate(e.target.value)}
+                          />
+                        </Form.Group>
+                      </Row>
+
+                      <Row className="mb-3">
+                        <Form.Group as={Col} controlId="formGridEmail">
+                          <Form.Label>How may time use</Form.Label>
+                          <Form.Control
+                            placeholder=" how may times use "
+                            type="number"
+                            onChange={(e) => sethtuse(e.target.value)}
+                          />
+                        </Form.Group>
+
+                        <Form.Group as={Col} controlId="formGridEmail">
+                          {/* <Form.Label> Start Date</Form.Label>
+                          <Form.Control
+                            placeholder=" start date "
+                            type="number"
+                            onChange={(e)=>setstartDate(e.target.value)}
+                          /> */}
                         </Form.Group>
                       </Row>
                       <div className="row pt-3 justify-content-center">
                         <div className="col-md-1">
-                          <button className="vhs-button" onClick={addvoucher}>Save</button>
+                          <button className="vhs-button" onClick={addvoucher}>
+                            Save
+                          </button>
                         </div>
                       </div>
                     </Form>

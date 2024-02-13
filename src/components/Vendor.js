@@ -19,7 +19,7 @@ const inactive = { color: "black", backgroundColor: "white" };
 
 function Vendor() {
   const [selected, setSelected] = useState(0);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const admin = JSON.parse(sessionStorage.getItem("admin"));
 
@@ -83,7 +83,7 @@ function Vendor() {
         const config = {
           url: "/addtechnician",
           method: "post",
-          baseURL: "http://api.vijayhomeservicebengaluru.in/api",
+          baseURL: "https://api.vijayhomesuperadmin.in/api",
           // data: formdata,
           headers: { "content-type": "application/json" },
           data: {
@@ -118,21 +118,23 @@ function Vendor() {
   }, []);
 
   const gettechnician = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/getalltechnician");
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/getalltechnician");
     if ((res.status = 200)) {
-      settechniciandata(res.data?.technician.filter((i)=>i.Type === "Vendor"));
-      setfilterdata(res.data?.technician.filter((i)=>i.Type === "Vendor"));
+      settechniciandata(
+        res.data?.technician.filter((i) => i.Type === "Vendor")
+      );
+      setfilterdata(res.data?.technician.filter((i) => i.Type === "Vendor"));
     }
   };
 
   const getcity = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/master/getcity");
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/master/getcity");
     if ((res.status = 200)) {
       setcitydata(res.data?.mastercity);
     }
   };
   const getcategory = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/getcategory");
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/getcategory");
     if ((res.status = 200)) {
       setcategorydata(res.data?.category);
     }
@@ -141,7 +143,7 @@ function Vendor() {
   const deletetechnician = async (id) => {
     axios({
       method: "post",
-      url: "http://api.vijayhomeservicebengaluru.in/api/deletetechnician/" + id,
+      url: "https://api.vijayhomesuperadmin.in/api/deletetechnician/" + id,
     })
       .then(function (response) {
         //handle success
@@ -241,7 +243,7 @@ function Vendor() {
       const config = {
         url: `/edittechnician/${data._id}`,
         method: "post",
-        baseURL: "http://api.vijayhomeservicebengaluru.in/api",
+        baseURL: "https://api.vijayhomesuperadmin.in/api",
         headers: { "content-type": "application/json" },
         data: {
           Type: Type1,
@@ -311,211 +313,212 @@ function Vendor() {
           </button>
         </div>
 
-        <div className="row w-100" >
+        <div className="row w-100">
           {selected == 0 ? (
             <>
               {" "}
               <div className="mt-5 p-3">
-            <input
-              type="text"
-              placeholder="Search here.."
-              className="w-25 form-control"
-              value={search}
-              onChange={(e) => setsearch(e.target.value)}
-            />
-          </div>
-          <div className="mt-1 border">
-            <DataTable
-              columns={columns}
-              data={filterdata}
-              pagination
-              fixedHeader
-              selectableRowsHighlight
-              subHeaderAlign="left"
-              highlightOnHover
-              onRowClicked={handleRowClick}
-            />
-          </div>
+                <input
+                  type="text"
+                  placeholder="Search here.."
+                  className="w-25 form-control"
+                  value={search}
+                  onChange={(e) => setsearch(e.target.value)}
+                />
+              </div>
+              <div className="mt-1 border">
+                <DataTable
+                  columns={columns}
+                  data={filterdata}
+                  pagination
+                  fixedHeader
+                  selectableRowsHighlight
+                  subHeaderAlign="left"
+                  highlightOnHover
+                  onRowClicked={handleRowClick}
+                />
+              </div>
             </>
           ) : (
             <>
               {" "}
               <div className="row m-auto">
-        <div className="col-md-12">
-          <div className="row justify-content-end pt-3">
-            <div className="col-md-1 p-0">
-              <button className="btn-primary-technician-button1">
+                <div className="col-md-12">
+                  <div className="row justify-content-end pt-3">
+                    <div className="col-md-1 p-0">
+                      {/* <button className="btn-primary-technician-button1">
                 Technician
-              </button>
-            </div>
-          </div>
-          <div className="card" style={{ marginTop: "30px" }}>
-            <div className="card-body p-3">
-              <form>
-                <div className="row pt-2">
-                  <div className="col-md-4">
-                    <div className="vhs-input-label">
-                      Type <span className="text-danger"> *</span>
+              </button> */}
                     </div>
-                    <div className="group pt-1">
-                      <select
-                        className="col-md-12 vhs-input-value"
-                        onChange={(e) => setType(e.target.value)}
-                      >
-                       
-                        {/* <option value="executive">Executive</option>
+                  </div>
+                  <div className="card" style={{ marginTop: "30px" }}>
+                    <div className="card-body p-3">
+                      <form>
+                        <div className="row pt-2">
+                          <div className="col-md-4">
+                            <div className="vhs-input-label">
+                              Type <span className="text-danger"> *</span>
+                            </div>
+                            <div className="group pt-1">
+                              <select
+                                className="col-md-12 vhs-input-value"
+                                onChange={(e) => setType(e.target.value)}
+                              >
+                                {/* <option value="executive">Executive</option>
                         <option value="technician">Technician</option>
                         <option value="pm">Project Manager</option> */}
-                        <option value="Vendor">Vendor</option>
+                                <option value="Vendor">Vendor</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div className="col-md-4">
+                            <div className="vhs-input-label">
+                              City <span className="text-danger"> *</span>
+                            </div>
+                            <div className="group pt-1">
+                              <select
+                                className="col-md-12 vhs-input-value"
+                                onChange={(e) => setcity(e.target.value)}
+                              >
+                                <option>--select--</option>
+                                {citydata.map((item) => (
+                                  <option value={item.city}>{item.city}</option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                          <div className="col-md-4">
+                            <div className="vhs-input-label">
+                              VHS Name <span className="text-danger"> *</span>
+                            </div>
+                            <div className="group pt-1">
+                              <input
+                                type="text"
+                                className="col-md-12 vhs-input-value"
+                                onChange={(e) => setvhsname(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        </div>
 
-                      </select>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="vhs-input-label">
-                      City <span className="text-danger"> *</span>
-                    </div>
-                    <div className="group pt-1">
-                      <select
-                        className="col-md-12 vhs-input-value"
-                        onChange={(e) => setcity(e.target.value)}
-                      >
-                        <option>--select--</option>
-                        {citydata.map((item) => (
-                          <option value={item.city}>{item.city}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="vhs-input-label">
-                      VHS Name <span className="text-danger"> *</span>
-                    </div>
-                    <div className="group pt-1">
-                      <input
-                        type="text"
-                        className="col-md-12 vhs-input-value"
-                        onChange={(e) => setvhsname(e.target.value)}
-                      />
+                        <div className="row pt-3">
+                          <div className="col-md-4">
+                            <div className="vhs-input-label">SMS Name</div>
+                            <div className="group pt-1">
+                              <input
+                                type="text"
+                                className="col-md-12 vhs-input-value"
+                                onChange={(e) => setsmsname(e.target.value)}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-md-4">
+                            <div className="vhs-input-label">
+                              Mobile Number{" "}
+                              <span className="text-danger"> *</span>
+                            </div>
+                            <div className="group pt-1">
+                              <input
+                                type="text"
+                                className="col-md-12 vhs-input-value"
+                                onChange={(e) => setnumber(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                          <div className="col-md-4">
+                            <div className="vhs-input-label">
+                              Password <span className="text-danger"> *</span>
+                            </div>
+                            <div className="group pt-1">
+                              <input
+                                onChange={(e) => setpassword(e.target.value)}
+                                type="text"
+                                className="col-md-12 vhs-input-value"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="row pt-3">
+                          <div className="col-md-4">
+                            <div className="vhs-input-label">
+                              Experiance <span className="text-danger"> *</span>
+                            </div>
+                            <div className="group pt-1">
+                              <input
+                                type="text"
+                                className="col-md-12 vhs-input-value"
+                                onChange={(e) => setexperiance(e.target.value)}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="col-md-4">
+                            <div className="vhs-input-label">
+                              Languages Known{" "}
+                              <span className="text-danger"> *</span>
+                            </div>
+                            <div className="group pt-1">
+                              <input
+                                type="text"
+                                className="col-md-12 vhs-input-value"
+                                onChange={(e) =>
+                                  setlanguagesknow(e.target.value)
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className="col-md-4">
+                            <div className="vhs-input-label">
+                              Category<span className="text-danger"> *</span>
+                            </div>
+                            <Multiselect
+                              className="mt-3"
+                              options={categorydata.map((category) => ({
+                                name: category.category,
+                                // id: category._id,
+                              }))}
+                              placeholder="Select Catagory"
+                              selectedValues={selectedCatagory}
+                              onSelect={onSelectCatagory}
+                              onRemove={onRemoveCatagory}
+                              displayValue="name"
+                              // disablePreSelectedValues={true}
+                              showCheckbox={true}
+                            />{" "}
+                          </div>
+
+                          <div className="col-md-4"></div>
+                        </div>
+
+                        <div className="row pt-2">
+                          <div className="vhs-sub-heading">
+                            Note: One Mobile Number Will Register Only Once For
+                            Technician
+                          </div>
+                        </div>
+
+                        <div className="row pt-3">
+                          <div className="col-md-2">
+                            <button
+                              className="vhs-button"
+                              onClick={addtechnician}
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>
-
-                <div className="row pt-3">
-                  <div className="col-md-4">
-                    <div className="vhs-input-label">SMS Name</div>
-                    <div className="group pt-1">
-                      <input
-                        type="text"
-                        className="col-md-12 vhs-input-value"
-                        onChange={(e) => setsmsname(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-md-4">
-                    <div className="vhs-input-label">
-                      Mobile Number <span className="text-danger"> *</span>
-                    </div>
-                    <div className="group pt-1">
-                      <input
-                        type="text"
-                        className="col-md-12 vhs-input-value"
-                        onChange={(e) => setnumber(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="vhs-input-label">
-                      Password <span className="text-danger"> *</span>
-                    </div>
-                    <div className="group pt-1">
-                      <input
-                        onChange={(e) => setpassword(e.target.value)}
-                        type="text"
-                        className="col-md-12 vhs-input-value"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="row pt-3">
-                  <div className="col-md-4">
-                    <div className="vhs-input-label">
-                      Experiance <span className="text-danger"> *</span>
-                    </div>
-                    <div className="group pt-1">
-                      <input
-                        type="text"
-                        className="col-md-12 vhs-input-value"
-                        onChange={(e) => setexperiance(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-md-4">
-                    <div className="vhs-input-label">
-                      Languages Known <span className="text-danger"> *</span>
-                    </div>
-                    <div className="group pt-1">
-                      <input
-                        type="text"
-                        className="col-md-12 vhs-input-value"
-                        onChange={(e) => setlanguagesknow(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="vhs-input-label">
-                      Category<span className="text-danger"> *</span>
-                    </div>
-                   
-                    <Multiselect
-                      className="mt-3"
-                      options={categorydata.map((category) => ({
-                        name: category.category,
-                        // id: category._id,
-                      }))}
-                      placeholder="Select Catagory"
-                      selectedValues={selectedCatagory}
-                      onSelect={onSelectCatagory}
-                      onRemove={onRemoveCatagory}
-                      displayValue="name"
-                      // disablePreSelectedValues={true}
-                      showCheckbox={true}
-                    />{" "}
-                  </div>
-
-                  <div className="col-md-4"></div>
-                </div>
-
-                <div className="row pt-2">
-                  <div className="vhs-sub-heading">
-                    Note: One Mobile Number Will Register Only Once For
-                    Technician
-                  </div>
-                </div>
-
-                <div className="row pt-3">
-                  <div className="col-md-2">
-                    <button className="vhs-button" onClick={addtechnician}>
-                      Save
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-
-         
-        </div>
-      </div>
-
+              </div>
             </>
           )}
         </div>
       </div>
-        <Modal
+      <Modal
         show={show}
         onHide={handleClose}
         backdrop="static"
@@ -561,8 +564,6 @@ function Vendor() {
                       </select>
                     </div>
                   </div>
-
-                
                 </div>
 
                 <div className="row pt-3">
@@ -671,11 +672,9 @@ function Vendor() {
             </div>
           </div>
         </Modal.Body>
-       
       </Modal>
     </div>
   );
 }
 
 export default Vendor;
-

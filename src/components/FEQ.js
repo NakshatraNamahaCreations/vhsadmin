@@ -10,11 +10,13 @@ import Header from "./Header";
 function Category() {
   const [category, setcategory] = useState("");
   const [catagoryImage, setCatagoryImage] = useState("");
+  const [title, settitle] = useState("");
   const [categorydata, setcategorydata] = useState([]);
   const [search, setsearch] = useState("");
   const [filterdata, setfilterdata] = useState([]);
   const [editCatagoryData, setEditCatagoryData] = useState({});
   const [editCatagoryName, setEditCatagoryName] = useState("");
+  const [Edittitle, setEdittitle] = useState("");
   const [editCatagoryImg, setEditCatagoryImage] = useState("");
   const formdata = new FormData();
   // console.log("editCatagoryData._id",editCatagoryData._id)
@@ -33,10 +35,11 @@ function Category() {
       alert("Please select all fields");
     } else {
       formdata.append("category", category);
-      formdata.append("categoryImg", catagoryImage);
+      formdata.append("title", title);
+      formdata.append("img", catagoryImage);
       try {
         const config = {
-          url: "/addcategory",
+          url: "/userapp/addfeq",
           method: "post",
           baseURL: "https://api.vijayhomesuperadmin.in/api",
           data: formdata,
@@ -44,7 +47,7 @@ function Category() {
         await axios(config).then(function (response) {
           if (response.status === 200) {
             alert("Successfully Added");
-            window.location.assign("/category");
+            window.location.reload("");
           }
         });
       } catch (error) {
@@ -65,10 +68,24 @@ function Category() {
   }, []);
 
   const getcategory = async () => {
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/getallfeq");
+    if ((res.status = 200)) {
+      setcategorydata(res.data?.feq);
+ 
+      setfilterdata(res.data?.feq);
+    }
+  };
+
+  const [categorydata1, setcategorydata1] = useState([]);
+
+  useEffect(() => {
+    getcategory1();
+  }, []);
+
+  const getcategory1 = async () => {
     let res = await axios.get("https://api.vijayhomesuperadmin.in/api/getcategory");
     if ((res.status = 200)) {
-      setcategorydata(res.data?.category);
-      setfilterdata(res.data?.category);
+      setcategorydata1(res.data?.category);
     }
   };
 
@@ -76,13 +93,14 @@ function Category() {
     e.preventDefault();
     try {
       formdata.append("category", editCatagoryName);
+      formdata.append("title", Edittitle);
       if (editCatagoryImg) {
-        formdata.append("categoryImg", editCatagoryImg);
+        formdata.append("img", editCatagoryImg);
       }
 
       const catagoryId = editCatagoryData._id;
       const config = {
-        url: `/editcategory/${catagoryId}`,
+        url: `/userapp/editfeq/${catagoryId}`,
         method: "put",
         baseURL: "https://api.vijayhomesuperadmin.in/api",
         data: formdata,
@@ -99,8 +117,8 @@ function Category() {
         // onUpdate();
         // handleClose();
       } else {
-        alert("Category not updated"); // Handle other status codes appropriately
-      } 
+        alert("Not updated"); // Handle other status codes appropriately
+      }
     } catch (error) {
       console.error(error);
       alert("Something went wrong");
@@ -117,14 +135,20 @@ function Category() {
       selector: (row) => row.category,
     },
     {
-      name: "Category image",
+      name: "Titel",
+      selector: (row) => row.title,
+    },
+    {
+      name: " image",
       selector: (row) => (
         <div>
           <img
-            src={`https://api.vijayhomesuperadmin.in/category/${row.categoryImg}`}
+            src={`https://api.vijayhomesuperadmin.in/feq/${row?.img[0]?.data}`}
+            alt="Pest Control"
             width="50px"
             height="50px"
           />
+
         </div>
       ),
     },
@@ -155,7 +179,7 @@ function Category() {
   const deletecategory = async (id) => {
     axios({
       method: "post",
-      url: "https://api.vijayhomesuperadmin.in/api/deletecategory/" + id,
+      url: "https://api.vijayhomesuperadmin.in/api/userapp/deletefeq/" + id,
     })
       .then(function (response) {
         //handle success
@@ -178,7 +202,7 @@ function Category() {
         <Header />
 
         <div className="row m-auto">
-          <h3>Category</h3>
+          <h3>Why need VhS</h3>
           <div className="col-md-12">
             <div className="card" style={{ marginTop: "30px" }}>
               <div className="card-body p-3">
@@ -190,16 +214,32 @@ function Category() {
                           Category <span className="text-danger"> *</span>
                         </div>
                         <div className="group pt-1">
+                          <select
+                            className="col-md-12 vhs-input-value"
+                            onChange={(e) => setcategory(e.target.value)}
+                          >
+                            <option>---SELECT---</option>
+                            {categorydata1.map((i) => (
+                              <option value={i.category}>{i.category}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-md-4">
+                        <div className="vhs-input-label">
+                          Title <span className="text-danger"> *</span>
+                        </div>
+                        <div className="group pt-1">
                           <input
                             type="text"
                             className="col-md-12 vhs-input-value"
-                            onChange={(e) => setcategory(e.target.value)}
+                            onChange={(e) => settitle(e.target.value)}
                           />
                         </div>
                       </div>
                       <div className="col-md-4">
                         <div className="vhs-input-label">
-                          Category Icon <span className="text-danger"> *</span>
+                          Image <span className="text-danger"> *</span>
                         </div>
                         <div className="group pt-1">
                           <input
@@ -208,6 +248,7 @@ function Category() {
                             onChange={(e) =>
                               setCatagoryImage(e.target.files[0])
                             }
+                            multiple
                           />
                           <b style={{ fontSize: "12px" }}>
                             Please select the dimensions Width=50px,Height=50px
@@ -262,7 +303,7 @@ function Category() {
           keyboard={false}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Edit Category</Modal.Title>
+            <Modal.Title>Edit </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="card-body p-3">
@@ -280,6 +321,19 @@ function Category() {
                     />
                   </div>
                 </div>
+                <div className="col-md-12">
+                  <div className="vhs-input-label">
+                    title <span className="text-danger"> *</span>
+                  </div>
+                  <div className="group pt-1">
+                    <input
+                      type="text"
+                      className="col-md-12 vhs-input-value"
+                      onChange={(e) => setEdittitle(e.target.value)}
+                      defaultValue={editCatagoryData?.title}
+                    />
+                  </div>
+                </div>
                 <div className="col-md-12 mt-3">
                   <div className="vhs-input-label">
                     Category Icon<span className="text-danger"> *</span>
@@ -290,7 +344,7 @@ function Category() {
                       type="file"
                       className="col-md-12 vhs-input-value"
                       onChange={(e) => setEditCatagoryImage(e.target.files[0])}
-                      // defaultValue={data.categoryImg}
+                    // defaultValue={data.categoryImg}
                     />
                   </div>
                 </div>

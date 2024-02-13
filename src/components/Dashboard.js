@@ -27,7 +27,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover
+    backgroundColor: theme.palette.action.hover,
   },
   // hide last border
   "&:last-child td, &:last-child th": {
@@ -35,29 +35,68 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-
-
 function Dashboard() {
   const { light } = useContext(CreateToggle);
-  const data01 = [
-    { name: "Group A", value: 400 },
-    { name: "Group B", value: 300 },
-    { name: "Group C", value: 300 },
-    { name: "Group D", value: 200 },
-  ];
-  const data02 = [
-    { name: "A1", value: 100 },
-    { name: "A2", value: 300 },
-    { name: "B1", value: 100 },
-    { name: "B2", value: 80 },
-    { name: "B3", value: 40 },
-    { name: "B4", value: 30 },
-    { name: "B5", value: 50 },
-    { name: "C1", value: 100 },
-    { name: "C2", value: 200 },
-    { name: "D1", value: 150 },
-    { name: "D2", value: 50 },
-  ];
+
+  const [userdata, setuserdata] = useState();
+  const [Servicedata, setServicedata] = useState();
+  const [paymentdata, setpaymentdata] = useState([]);
+  const [displayedRows, setDisplayedRows] = useState(5);
+
+  const showAllRows = () => {
+    setDisplayedRows(paymentdata.length);
+  };
+  const showFewerRows = () => {
+    setDisplayedRows(5);
+  };
+
+  useEffect(() => {
+    getappcustomer();
+    getservicemanagement();
+    getapppauyments();
+  }, []);
+
+  const getappcustomer = async () => {
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/gettotalcustomerlength");
+    if ((res.status = 200)) {
+      setuserdata(res.data?.totalRecords);
+    }
+  };
+
+  const getapppauyments = async () => {
+    let res = await axios.get(
+      "https://api.vijayhomesuperadmin.in/api/payment/service/paywithuserdata"
+    );
+    if ((res.status = 200)) {
+      setpaymentdata(res.data?.userdata);
+    }
+  };
+
+  const totalAmount = paymentdata.reduce(
+    (total, item) => total + item.data.amount,
+    0
+  );
+  const formattedAmt = totalAmount / 100;
+
+  const getservicemanagement = async () => {
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/getbookingservicelength");
+    if ((res.status = 200)) {
+      console.log("res.data?.totalRecords",res.data?.totalRecords)
+      setServicedata(res.data?.totalRecords);
+    }
+  };
+
+  const formatdate = (fdate) => {
+    const date = new Date(fdate);
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+
+    const formattedDate = `${day}/${month}/${year}`;
+    return formattedDate;
+  };
+
   const [state, setState] = useState({
     options: {
       colors: ["rgb(176, 39, 39)", "#fff"],
@@ -69,10 +108,10 @@ function Dashboard() {
           "Jan",
           "Feb",
           "Mar",
-          "Aprl",
+          "Apr",
           "May",
           "Jun",
-          "July",
+          "Jul",
           "Aug",
           "Sep",
           "Oct",
@@ -83,33 +122,40 @@ function Dashboard() {
     },
     series: [
       {
-        // name: "People Born",
-        data: [30, 40, 45, 50, 49, 60, 70, 91, 101, 111, 121, 131],
+        name: "Payment Counts",
+        data: [],
       },
     ],
   });
 
-  const [userdata, setuserdata] = useState([]);
-  const [Servicedata, setServicedata] = useState([]);
-
   useEffect(() => {
-    getappcustomer();
-    getservicemanagement();
-  }, []);
+    const dateCounts = {};
 
-  const getappcustomer = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/userapp/getuser");
-    if ((res.status = 200)) {
-      setuserdata(res.data?.userdata);
-    }
-  };
+    // Count payments for each date
+    paymentdata.forEach((payment) => {
+      const createdAt = new Date(payment.createdAt);
+      const month = createdAt.getMonth();
+      dateCounts[month] = (dateCounts[month] || 0) + 1;
+    });
 
-  const getservicemanagement = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/userapp/getservices");
-    if ((res.status = 200)) {
-      setServicedata(res.data?.service);
-    }
-  };
+    // Extract the counts for each month
+    const counts = Array.from(
+      { length: 12 },
+      (_, month) => dateCounts[month] || 0
+    );
+
+    // Update the state with the new data
+    setState((prevState) => ({
+      ...prevState,
+      series: [
+        {
+          ...prevState.series[0],
+          data: counts,
+        },
+      ],
+    }));
+  }, [paymentdata]);
+
   return (
     <div className={light ? "row black container_box" : "row "}>
       <div className="col-md-2 ">
@@ -125,7 +171,10 @@ function Dashboard() {
                   <div className="card-body">
                     <img src="rupee.png" width="50px" />
                     <div className="home-content">Earnings</div>
-                    <div className="home-desc">2500</div>
+                    <div className="home-desc">
+                      <i class="fa-solid fa-indian-rupee-sign"></i>{" "}
+                      {formattedAmt}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -135,7 +184,7 @@ function Dashboard() {
                   <div className="card-body">
                     <img src="service.png" width="50px" />
                     <div className="home-content">Services</div>
-                    <div className="home-desc">{Servicedata?.length}</div>
+                    <div className="home-desc">{Servicedata}</div>
                   </div>
                 </div>
               </div>
@@ -145,10 +194,10 @@ function Dashboard() {
               <div className="col-md-6">
                 <div className="card home-col shadow p-3 mb-5  rounded">
                   <div className="card-body">
-                    <img src="rating.png" width="50px" />
+                    <img src="customer.png" width="50px" />
 
                     <div className="home-content">Customer</div>
-                    <div className="home-desc">{userdata?.length}</div>
+                    <div className="home-desc">{userdata}</div>
                   </div>
                 </div>
               </div>
@@ -172,75 +221,83 @@ function Dashboard() {
               options={state.options}
               series={state.series}
               type="bar"
-              width="700"
+              width="100%"
             />
           </div>
         </div>
         <div>
-        <div style={{ }}>
-              <h3>Recent Transctions List</h3>
+          <div style={{}}>
+            <h3>Recent Transctions List</h3>
+          </div>
+          {displayedRows < paymentdata.length ? (
+            <div>
+              <button
+                onClick={showAllRows}
+                style={{
+                  float: "right",
+                  background: "darkred",
+                  color: "white",
+                }}
+              >
+                Show All
+              </button>
             </div>
+          ) : (
+            <div>
+              <button
+                onClick={showFewerRows}
+                style={{
+                  float: "right",
+                  background: "darkred",
+                  color: "white",
+                }}
+              >
+                Show less
+              </button>
+            </div>
+          )}
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Transcation ID</StyledTableCell>
                   <StyledTableCell align="right">Customer Name</StyledTableCell>
+                  <StyledTableCell align="right">
+                    Customer Number
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    Customer Email
+                  </StyledTableCell>
                   <StyledTableCell align="right">Date</StyledTableCell>
-                  <StyledTableCell align="right">
-                 Amount
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                   Status
-                  </StyledTableCell>
+                  <StyledTableCell align="right">Amount</StyledTableCell>
+                  <StyledTableCell align="right">Status</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <StyledTableRow>
-                  <StyledTableCell component="th" scope="row">
-                   #T12023912312391283
-                  </StyledTableCell>
-                  <StyledTableCell align="right">Yogesh</StyledTableCell>
-                  <StyledTableCell align="right">12/08/2023</StyledTableCell>
-                  <StyledTableCell align="right">230</StyledTableCell>
-                  <StyledTableCell align="right">Paid</StyledTableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <StyledTableCell component="th" scope="row">
-                   #T12023912312391283
-                  </StyledTableCell>
-                  <StyledTableCell align="right">Arun</StyledTableCell>
-                  <StyledTableCell align="right">14/08/2023</StyledTableCell>
-                  <StyledTableCell align="right">450</StyledTableCell>
-                  <StyledTableCell align="right">Paid</StyledTableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <StyledTableCell component="th" scope="row">
-                   #T12023912312391283
-                  </StyledTableCell>
-                  <StyledTableCell align="right">Sudeep</StyledTableCell>
-                  <StyledTableCell align="right">15/08/2023</StyledTableCell>
-                  <StyledTableCell align="right">300</StyledTableCell>
-                  <StyledTableCell align="right">Paid</StyledTableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <StyledTableCell component="th" scope="row">
-                   #T12023912312391283
-                  </StyledTableCell>
-                  <StyledTableCell align="right">Chethan</StyledTableCell>
-                  <StyledTableCell align="right">18/08/2023</StyledTableCell>
-                  <StyledTableCell align="right">1500</StyledTableCell>
-                  <StyledTableCell align="right">Paid</StyledTableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <StyledTableCell component="th" scope="row">
-                   #T12023912312391283
-                  </StyledTableCell>
-                  <StyledTableCell align="right">Lakshmi</StyledTableCell>
-                  <StyledTableCell align="right">20/08/2023</StyledTableCell>
-                  <StyledTableCell align="right">3400</StyledTableCell>
-                  <StyledTableCell align="right">Paid</StyledTableCell>
-                </StyledTableRow>
+                {paymentdata.slice(0, displayedRows).map((i) => (
+                  <StyledTableRow key={i.data?.transactionId}>
+                    <StyledTableCell component="th" scope="row">
+                      {i.data?.transactionId}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {i?.userdata[0]?.customerName}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {i?.userdata[0]?.mainContact}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {i?.userdata[0]?.email}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {formatdate(i.createdAt)}
+                    </StyledTableCell>
+
+                    <StyledTableCell align="right">
+                      {i.data?.amount / 100}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">Paid</StyledTableCell>
+                  </StyledTableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>

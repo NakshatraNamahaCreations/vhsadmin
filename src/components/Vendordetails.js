@@ -19,7 +19,7 @@ function Vendordetails() {
   }, []);
 
   const gettechnician = async () => {
-    let res = await axios.get("http://api.vijayhomeservicebengaluru.in/api/getalltechnician");
+    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/getalltechnician");
     if ((res.status = 200)) {
       settechniciandata(
         res.data?.technician.filter((i) => i.Type === "Vendor" && i._id == id)
@@ -111,7 +111,7 @@ function Vendordetails() {
               aria-describedby="basic-addon1"
               style={{
                 width: "100%",
-      
+
                 borderRadius: "3px",
                 borderLeft: "2px solid #a9042e",
               }}

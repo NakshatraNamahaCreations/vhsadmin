@@ -17,10 +17,8 @@ const inactive1 = { color: "black", backgroundColor: "white" };
 
 function Banner() {
   const [selected1, setSelected1] = useState(0);
-  const [categorydata, setcategorydata] = useState([]);
-  const [banner, setBanner] = useState("");
-  const [subcategory, setsubcategory] = useState("");
 
+  const [banner, setBanner] = useState("");
   const [bannerdata, setBannerdata] = useState([]);
   const formdata = new FormData();
   const apiURL = process.env.REACT_APP_API_URL;
@@ -30,15 +28,15 @@ function Banner() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  console.log(banner);
   const postbanner = async (e) => {
     e.preventDefault();
-
+    console.log(banner);
     formdata.append("banner", banner);
-    formdata.append("subcategory", subcategory);
 
     try {
       const config = {
-        url: "/userapp/addbanner",
+        url: "/website/addwebbanner",
         method: "post",
         baseURL: "https://api.vijayhomesuperadmin.in/api",
 
@@ -47,23 +45,12 @@ function Banner() {
       await axios(config).then(function (response) {
         if (response.status === 200) {
           alert("Successfully Added");
-          window.location.assign("/banner");
+          window.location.assign("/websitebanner");
         }
       });
     } catch (error) {
       console.error(error);
-      alert("banner  Not Added");
-    }
-  };
-
-  useEffect(() => {
-    getcategory();
-  }, []);
-
-  const getcategory = async () => {
-    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/getappsubcat");
-    if ((res.status = 200)) {
-      setcategorydata(res.data?.subcategory);
+      alert("  Not Added");
     }
   };
 
@@ -72,7 +59,9 @@ function Banner() {
   }, []);
 
   const getbannerimg = async () => {
-    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/getallbanner");
+    let res = await axios.get(
+      "https://api.vijayhomesuperadmin.in/api/website/getallwebbanner"
+    );
     if ((res.status = 200)) {
       setBannerdata(res.data?.banner);
       console.log(res.data?.banner);
@@ -82,7 +71,7 @@ function Banner() {
   const deletebannerimg = async (id) => {
     axios({
       method: "post",
-      url: "https://api.vijayhomesuperadmin.in/api/userapp/deletebanner/" + id,
+      url: "https://api.vijayhomesuperadmin.in/api/website/deletewebbanner/" + id,
     })
       .then(function (response) {
         //handle success
@@ -106,7 +95,7 @@ function Banner() {
         <div className="row  set_margin ">
           <div>
             <div className="d-flex  mt-3">
-              <h4 style={{ color: "#FF0060" }}>Home Page Slider Images</h4>
+              <h4 style={{ color: "#FF0060" }}>Website banner</h4>
             </div>
           </div>
         </div>
@@ -136,7 +125,6 @@ function Banner() {
                   <thead>
                     <tr>
                       <th>SI.No</th>
-                      <th>Subcategory</th>
                       <th>Banner Images</th>
                       <th>Action</th>
                     </tr>
@@ -146,11 +134,11 @@ function Banner() {
                       return (
                         <tr key={i}>
                           <td>{i + 1}</td>
-                          <td>{element.subcategory}</td>
+
                           <td>
                             <img
                               className="header_logo"
-                              src={`https://api.vijayhomesuperadmin.in/userbanner/${element.banner}`}
+                              src={`https://api.vijayhomesuperadmin.in/webBanner/${element.banner}`}
                               width={"100px"}
                               height={"50px"}
                             />
@@ -186,30 +174,8 @@ function Banner() {
             <Modal.Title>Slider Image</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div className="vhs-input-label mt-3">
-              Sub-Catagory <span className="text-danger"> *</span>
-            </div>
-            <div className="group pt-1">
-              <select
-                className="col-md-6 vhs-input-value"
-                onChange={(e) => setsubcategory(e.target.value)}
-              >
-                <option>-- Select subcategory--</option>
-                {categorydata.map((i) => (
-                  <option value={i.subcategory}>{i.subcategory}</option>
-                ))}
-              </select>
-            </div>
-            <div className="group pt-1 mt-4">
-              <input
-                className="col-md-6 vhs-input-value"
-                type="file"
-                onChange={(e) => setBanner(e.target.files[0])}
-              />
-              <div className="mt-3" style={{ fontSize: "13px" }}>
-                <b>Note :</b> width=350px,height=150px
-              </div>
-            </div>
+            <input type="file" onChange={(e) => setBanner(e.target.files[0])} />
+            <div className="mt-3" style={{ fontSize: "13px" }}></div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>

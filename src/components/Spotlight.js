@@ -15,16 +15,15 @@ const active1 = {
 };
 const inactive1 = { color: "black", backgroundColor: "white" };
 
-function Banner() {
+function Spotlight() {
   const [selected1, setSelected1] = useState(0);
-  const [categorydata, setcategorydata] = useState([]);
-  const [banner, setBanner] = useState("");
-  const [subcategory, setsubcategory] = useState("");
 
+  const [banner, setBanner] = useState("");
+  const [category, setcategory] = useState("");
+  const [categorydata, setcategorydata] = useState([]);
   const [bannerdata, setBannerdata] = useState([]);
   const formdata = new FormData();
-  const apiURL = process.env.REACT_APP_API_URL;
-  const imgURL = process.env.REACT_APP_IMAGE_API_URL;
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -32,13 +31,13 @@ function Banner() {
 
   const postbanner = async (e) => {
     e.preventDefault();
-
+    console.log(banner);
     formdata.append("banner", banner);
-    formdata.append("subcategory", subcategory);
+    formdata.append("category", category);
 
     try {
       const config = {
-        url: "/userapp/addbanner",
+        url: "/userapp/addspotlightbanner",
         method: "post",
         baseURL: "https://api.vijayhomesuperadmin.in/api",
 
@@ -47,7 +46,7 @@ function Banner() {
       await axios(config).then(function (response) {
         if (response.status === 200) {
           alert("Successfully Added");
-          window.location.assign("/banner");
+          window.location.assign("/spotlight");
         }
       });
     } catch (error) {
@@ -55,7 +54,6 @@ function Banner() {
       alert("banner  Not Added");
     }
   };
-
   useEffect(() => {
     getcategory();
   }, []);
@@ -72,17 +70,19 @@ function Banner() {
   }, []);
 
   const getbannerimg = async () => {
-    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/getallbanner");
+    let res = await axios.get(
+      "https://api.vijayhomesuperadmin.in/api/userapp/getallspotlightbanner"
+    );
     if ((res.status = 200)) {
-      setBannerdata(res.data?.banner);
-      console.log(res.data?.banner);
+      setBannerdata(res.data?.spotlightbanner);
+      console.log(res.data?.spotlightbanner);
     }
   };
 
   const deletebannerimg = async (id) => {
     axios({
       method: "post",
-      url: "https://api.vijayhomesuperadmin.in/api/userapp/deletebanner/" + id,
+      url: "https://api.vijayhomesuperadmin.in/api/userapp/deletespotlightbanner/" + id,
     })
       .then(function (response) {
         //handle success
@@ -106,10 +106,11 @@ function Banner() {
         <div className="row  set_margin ">
           <div>
             <div className="d-flex  mt-3">
-              <h4 style={{ color: "#FF0060" }}>Home Page Slider Images</h4>
+              <h4 style={{ color: "#FF0060" }}>Spotlight Images</h4>
             </div>
           </div>
         </div>
+
         <div className="row pt-3 m-auto" style={{ marginLeft: "-72px" }}>
           <div className="row  set_margin">
             <div>
@@ -119,12 +120,15 @@ function Banner() {
                   variant="danger"
                   onClick={handleShow}
                 >
-                  Add Images
+                  Add spotlight img
                 </Button>
               </div>
             </div>
-
-            <div className="row  justify-content-center ">
+            <div>
+              {/* first added image will reflected  first in home page remaining all
+              below */}
+            </div>
+            <div className="row  justify-content-center mt-3">
               <div className="col-md-12">
                 <Table
                   className="table_container table_data text-center"
@@ -136,7 +140,8 @@ function Banner() {
                   <thead>
                     <tr>
                       <th>SI.No</th>
-                      <th>Subcategory</th>
+                      <th>Category</th>
+
                       <th>Banner Images</th>
                       <th>Action</th>
                     </tr>
@@ -146,11 +151,12 @@ function Banner() {
                       return (
                         <tr key={i}>
                           <td>{i + 1}</td>
-                          <td>{element.subcategory}</td>
+                          <td>{element.category}</td>
+
                           <td>
                             <img
                               className="header_logo"
-                              src={`https://api.vijayhomesuperadmin.in/userbanner/${element.banner}`}
+                              src={`https://api.vijayhomesuperadmin.in/spotlight/${element.banner}`}
                               width={"100px"}
                               height={"50px"}
                             />
@@ -183,7 +189,7 @@ function Banner() {
       <>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Slider Image</Modal.Title>
+            <Modal.Title>Spotlight</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="vhs-input-label mt-3">
@@ -192,7 +198,7 @@ function Banner() {
             <div className="group pt-1">
               <select
                 className="col-md-6 vhs-input-value"
-                onChange={(e) => setsubcategory(e.target.value)}
+                onChange={(e) => setcategory(e.target.value)}
               >
                 <option>-- Select subcategory--</option>
                 {categorydata.map((i) => (
@@ -200,15 +206,13 @@ function Banner() {
                 ))}
               </select>
             </div>
-            <div className="group pt-1 mt-4">
-              <input
-                className="col-md-6 vhs-input-value"
-                type="file"
-                onChange={(e) => setBanner(e.target.files[0])}
-              />
-              <div className="mt-3" style={{ fontSize: "13px" }}>
-                <b>Note :</b> width=350px,height=150px
-              </div>
+
+            <div className="vhs-input-label mt-3">
+              <b>Select file </b> <span className="text-danger"> *</span>
+            </div>
+            <input type="file" onChange={(e) => setBanner(e.target.files[0])} />
+            <div className="mt-3" style={{ fontSize: "13px" }}>
+              <b>Note :</b> width=300px,height=150px
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -225,4 +229,4 @@ function Banner() {
   );
 }
 
-export default Banner;
+export default Spotlight;
