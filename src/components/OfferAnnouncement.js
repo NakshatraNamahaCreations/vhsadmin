@@ -111,7 +111,7 @@ function OfferAnnouncement() {
                 <div className="row  set_margin ">
                     <div>
                         <div className="d-flex  mt-3">
-                            <h4 style={{ color: "#FF0060" }}>OfferAnnouncement sdui</h4>
+                            <h4 style={{ color: "#FF0060" }}>OfferAnnouncement  for vendors</h4>
                         </div>
                     </div>
                 </div>
