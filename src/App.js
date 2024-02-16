@@ -42,6 +42,7 @@ import WebsiteBanner from "./components/WebsiteBanner"
 import EXBanner from "./components/EXbanner";
 import SpotlightSP from "./components/SpotlightSP";
 import OfferAnnouncement from "./components/OfferAnnouncement";
+import ReviewVideos from "./components/ReviewVideos";
 
 function App() {
   const admin=localStorage.getItem("admin");
@@ -79,7 +80,8 @@ function App() {
         <Route path="/exclusivebanner" element={<EXBanner />} />
         <Route path="/spotlightSP" element={<SpotlightSP />} />
         <Route path="/offerAnnouncement" element={<OfferAnnouncement />} />
-
+        
+        <Route path="/ReviewVideos" element={<ReviewVideos />} />
         <Route path="/servicedetails/:id" element={<Servicedetails />} />
         <Route path="/vendordetails/:id" element={<Vendordetails />} />
         <Route path="/feq" element={<FEQ />} />
