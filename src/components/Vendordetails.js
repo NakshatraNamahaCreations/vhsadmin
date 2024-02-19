@@ -12,20 +12,17 @@ function Vendordetails() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const { id } = useParams();
-  console.log(id);
-  const [techniciandata, settechniciandata] = useState([]);
+  const [data, setdata] = useState({});
+  console.log("data",data);
   useEffect(() => {
-    gettechnician();
-  }, []);
+    const urlParams = new URLSearchParams(window.location.search);
+    const rowDataString = urlParams.get("rowData");
+    const rowData = JSON.parse(rowDataString);
+    setdata(rowData);
+    // Use rowData in your component
 
-  const gettechnician = async () => {
-    let res = await axios.get("https://api.vijayhomesuperadmin.in/api/getalltechnician");
-    if ((res.status = 200)) {
-      settechniciandata(
-        res.data?.technician.filter((i) => i.Type === "Vendor" && i._id == id)
-      );
-    }
-  };
+  }, [id]);
+  
   return (
     <div div className="row">
       <div className="col-md-2">
@@ -45,23 +42,23 @@ function Vendordetails() {
             />
             <p className="vp">
               Name:
-              <b>{techniciandata[0]?.vhsname}</b>
+              <b>{data?.vhsname}</b>
             </p>
             <p className="vp">
               Number:
-              <b>{techniciandata[0]?.number}</b>
+              <b>{data?.number}</b>
             </p>
             <p className="vp">
               Experiance:
-              <b>{techniciandata[0]?.experiance}</b>
+              <b>{data?.experiance}</b>
             </p>
             <p className="vp">
               Language:
-              <b>{techniciandata[0]?.languagesknow}</b>
+              <b>{data?.languagesknow}</b>
             </p>
             <p className="vp">
               Password:
-              <b>{techniciandata[0]?.password}</b>
+              <b>{data?.password}</b>
             </p>
           </div>
           <div className="mt-5 col-6">
@@ -78,10 +75,10 @@ function Vendordetails() {
                 </h3>
                 <div>
                   <b style={{ fontSize: "25px" }}>
-                    <i class="fa-solid fa-indian-rupee-sign"></i>12000
+                    <i class="fa-solid fa-indian-rupee-sign"></i>{data?.vendorAmt}
                   </b>
                 </div>
-
+{/* 
                 <Button
                   style={{
                     background: "rgb(176, 39, 39)",
@@ -91,7 +88,7 @@ function Vendordetails() {
                   onClick={handleShow}
                 >
                   Recharge{" "}
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>

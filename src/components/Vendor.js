@@ -87,7 +87,7 @@ function Vendor() {
           // data: formdata,
           headers: { "content-type": "application/json" },
           data: {
-            Type: "Vendor",
+            Type: "outVendor",
             category: selectedCatagory,
             vhsname: vhsname,
             smsname: smsname,
@@ -121,9 +121,9 @@ function Vendor() {
     let res = await axios.get("https://api.vijayhomesuperadmin.in/api/getalltechnician");
     if ((res.status = 200)) {
       settechniciandata(
-        res.data?.technician.filter((i) => i.Type === "Vendor")
+        res.data?.technician.filter((i) => i.Type === "outVendor")
       );
-      setfilterdata(res.data?.technician.filter((i) => i.Type === "Vendor"));
+      setfilterdata(res.data?.technician.filter((i) => i.Type === "outVendor"));
     }
   };
 
@@ -283,10 +283,18 @@ function Vendor() {
     console.log(removedItem);
   };
 
+  // const handleRowClick = (row) => {
+  //   navigate(`/vendordetails/${row}`);
+  // };
   const handleRowClick = (row) => {
-    navigate(`/vendordetails/${row._id}`);
-  };
+    const queryString = new URLSearchParams({
+      rowData: JSON.stringify(row),
+    }).toString();
+    const newTab = window.open(
+      `/vendordetails/${row._id}?${queryString}`,
 
+    );
+  };
   return (
     <div div className="row">
       <div className="col-md-2">
