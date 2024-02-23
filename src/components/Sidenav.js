@@ -109,6 +109,10 @@ function Sidenav() {
               <Link to="/whatsappandphonenumber" />
             </MenuItem>
             <MenuItem>
+            Service Videos
+              <Link to="/SVideos" />
+            </MenuItem>
+            <MenuItem>
             ReviewVideos
               <Link to="/ReviewVideos" />
             </MenuItem>
