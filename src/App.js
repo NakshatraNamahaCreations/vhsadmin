@@ -44,6 +44,7 @@ import SpotlightSP from "./components/SpotlightSP";
 import OfferAnnouncement from "./components/OfferAnnouncement";
 import ReviewVideos from "./components/ReviewVideos";
 import Svideo from "./components/Svideo";
+import RateCard from "./RateCard";
 
 function App() {
   const admin=localStorage.getItem("admin");
@@ -87,7 +88,8 @@ function App() {
         <Route path="/vendordetails/:id" element={<Vendordetails />} />
         <Route path="/feq" element={<FEQ />} />
 
-     
+        <Route path="/RateCard" element={<RateCard />} />
+
         <Route path="/settings" element={<Settings />} />
         <Route path="/Sidenav" element={<Sidenav />} />
         <Route path="/Signup" element={<Signup />} />

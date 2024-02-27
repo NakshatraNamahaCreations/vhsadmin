@@ -116,6 +116,10 @@ function Sidenav() {
             ReviewVideos
               <Link to="/ReviewVideos" />
             </MenuItem>
+            <MenuItem>
+            RateCard
+              <Link to="/RateCard" />
+            </MenuItem>
           </SubMenu>
 
           <MenuItem>

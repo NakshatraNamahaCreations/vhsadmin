@@ -30,7 +30,7 @@ function Svideo() {
     editSubcategoryData?.othservice || []
   );
 
-  const [homePagetitle, sethomePagetitle] = useState("");
+
 
   const formdata = new FormData();
 
@@ -49,7 +49,7 @@ function Svideo() {
     getsubcategory();
   }, []);
 
-  console.log("subcategorydata",subcategorydata);
+
 
   const getcategory = async () => {
     let res = await axios.get("https://api.vijayhomesuperadmin.in/api/getcategory");
@@ -332,7 +332,7 @@ function Svideo() {
                       <p className="mt-2">
                         {" "}
                         <b>
-                          Note:Width= 400px ,Height:200px and mp4 format
+                          Note:Width= 160px ,Height:250px and mp4 format
                         </b>{" "}
                       </p>
                     </div>

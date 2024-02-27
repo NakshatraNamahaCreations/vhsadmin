@@ -3,7 +3,7 @@ import Header from "./Header";
 import Sidenav from "./Sidenav";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Offcanvas from "react-bootstrap/Offcanvas";
+
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -18,8 +18,6 @@ import { useNavigate } from "react-router-dom";
 function Services() {
   const existingData = JSON.parse(localStorage.getItem("Store_Slots")) || [];
   const plandata = JSON.parse(localStorage.getItem("plans")) || [];
-  const homepagetitleData =
-    JSON.parse(localStorage.getItem("homepagetitle")) || [];
   const morepriceData = JSON.parse(localStorage.getItem("plansprice")) || [];
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
@@ -34,8 +32,6 @@ function Services() {
   const [sub_subcategory, setsub_subcategory] = useState("");
   const [ServiceHour, setServiceHour] = useState("");
   const [ServiceName, setServiceName] = useState("");
-  const [ServiceDesc, setServiceDesc] = useState("");
-  const [ServicePrice, setServicePrice] = useState("");
   const [ServiceGst, setServiceGst] = useState("");
   const [NofServiceman, setNofServiceman] = useState("");
   const [Subcategory, setSubcategory] = useState("");
@@ -50,18 +46,17 @@ function Services() {
   const [slotsdata, setslotsdata] = useState([]);
   const [titledata, settitledata] = useState([]);
   const [slotCity, setslotcity] = useState("");
-  const [startTime, setstartTime] = useState("");
+
   const [endTime, setendTime] = useState([]);
   const [servicePeriod, setservicePeriod] = useState("");
 
   const [Image, setImage] = useState("");
-  const [Plans, setPlans] = useState("");
+ 
   const [homepagetitle, sethomePagetitle] = useState("");
   const [serviceDirection, setserviceDirection] = useState("");
   const [searchItems, setSearchItems] = useState("");
   const [serID, setserID] = useState("");
-  const [serviceIncludes, setserviceIncludes] = useState("");
-  const [serviceExcludes, setserviceExcludes] = useState("");
+
   const [quantity, setquantity] = useState("");
   const [pName, setpName] = useState("");
   const [pPrice, setpPrice] = useState("");
@@ -340,21 +335,7 @@ function Services() {
       });
   };
 
-  // useEffect(() => {
-  //   const filteredData = Servicedata.filter((item) => {
-  //     const searchString = searchItems.toLowerCase();
-  //     const categoryMatch = item.category?.toLowerCase().includes(searchString);
-  //     const subcategoryMatch =
-  //       item.Subcategory?.toLowerCase().includes(searchString);
-  //     const ServiceNameMatch = item.serviceName
-  //       ?.toLowerCase()
-  //       .includes(searchString);
-  //     return categoryMatch || subcategoryMatch || ServiceNameMatch;
-  //   });
-
-  //   setfilterdata(filteredData);
-  // }, [searchItems, Servicedata]);
-  // setSearchItems
+ 
 
   const columns = [
     {
