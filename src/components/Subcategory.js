@@ -14,7 +14,6 @@ function Subcategory() {
   const [ServiceData, setServiceData] = useState([]);
   const [subcategoryImg, setsubcategoryImg] = useState("");
   const [filterdata, setfilterdata] = useState([]);
-  const [data, setdata] = useState([]);
   const [subcategorydata, setsubcategorydata] = useState([]);
   const [subcatvideo, setsubcatvideo] = useState("");
   const [titledata, settitledata] = useState([]);
@@ -68,7 +67,7 @@ function Subcategory() {
       formdata.append("homePagetitle", homePagetitle);
       formdata.append("othservice", JSON.stringify(othservice));
 
-      console.log("formdata", formdata);
+     
       try {
         const config = {
           url: "/userapp/addappsubcat",
@@ -327,7 +326,7 @@ function Subcategory() {
           <div className="col-md-12">
             <div className="card" style={{ marginTop: "30px" }}>
               <div className="card-body p-3">
-                {/* <div className="vhs-sub-heading pb-2">Add New Record</div> */}
+             
                 <form>
                   <div className="row">
                     <div className="col-md-4">
@@ -458,7 +457,7 @@ function Subcategory() {
           </div>
         </div>
 
-        {/* edit subcategory */}
+   
         <Modal
           show={show}
           onHide={handleClose}

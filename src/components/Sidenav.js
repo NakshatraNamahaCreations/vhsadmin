@@ -78,11 +78,11 @@ function Sidenav() {
               <Link to="/websitebanner" />
             </MenuItem>
             <MenuItem>
-            Middle service  Spotlight Banners
+              Middle service  Spotlight Banners
               <Link to="/spotlightSP" />
             </MenuItem>
             <MenuItem>
-            offerAnnouncement
+              offerAnnouncement
               <Link to="/offerAnnouncement" />
             </MenuItem>
           </SubMenu>
@@ -109,15 +109,15 @@ function Sidenav() {
               <Link to="/whatsappandphonenumber" />
             </MenuItem>
             <MenuItem>
-            Service Videos
+              Service Videos
               <Link to="/SVideos" />
             </MenuItem>
             <MenuItem>
-            ReviewVideos
+              ReviewVideos
               <Link to="/ReviewVideos" />
             </MenuItem>
             <MenuItem>
-            RateCard
+              RateCard
               <Link to="/RateCard" />
             </MenuItem>
           </SubMenu>
@@ -166,11 +166,14 @@ function Sidenav() {
             Payment Reports
             <Link to="/Paymentsreports" />
           </MenuItem>
-
-          <MenuItem>
-            Vendors Management <Link to="/vendor" />
-          </MenuItem>
-
+          <SubMenu title=" Vendors Management">
+            <MenuItem>
+              Vendors  <Link to="/vendor" />
+            </MenuItem>
+            <MenuItem>
+              Training  <Link to="/Training" />
+            </MenuItem>
+          </SubMenu>
           <MenuItem>
             Settings <Link to="/settings" />{" "}
           </MenuItem>

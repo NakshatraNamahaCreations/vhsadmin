@@ -144,7 +144,7 @@ function ServiceBooking() {
               pagination
               paginationServer
               paginationTotalRows={totalRecords}
-              paginationPerPage={10}
+              paginationPerPage={15}
               paginationRowsPerPageOptions={[15, 30, 50]}
               onChangePage={(current) => setCurrentPage(current)}
               selectableRowsHighlight

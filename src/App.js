@@ -45,6 +45,7 @@ import OfferAnnouncement from "./components/OfferAnnouncement";
 import ReviewVideos from "./components/ReviewVideos";
 import Svideo from "./components/Svideo";
 import RateCard from "./RateCard";
+import Training from "./components/Training"
 
 function App() {
   const admin=localStorage.getItem("admin");
@@ -87,6 +88,7 @@ function App() {
         <Route path="/servicedetails/:id" element={<Servicedetails />} />
         <Route path="/vendordetails/:id" element={<Vendordetails />} />
         <Route path="/feq" element={<FEQ />} />
+        <Route path="/Training" element={<Training />} />
 
         <Route path="/RateCard" element={<RateCard />} />
 
