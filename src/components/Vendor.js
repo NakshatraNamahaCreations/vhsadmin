@@ -494,7 +494,7 @@ function Vendor() {
                               displayValue="name"
                               // disablePreSelectedValues={true}
                               showCheckbox={true}
-                            />{" "}
+                            />
                           </div>
 
                           <div className="col-md-4"></div>

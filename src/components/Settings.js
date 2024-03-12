@@ -7,6 +7,7 @@ import Switch from '@mui/material/Switch';
 import { alpha, styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
+
 function Settings() {
   const [oldPassword, setoldPassword] = useState("");
   const [newPassword, setnewPassword] = useState("");

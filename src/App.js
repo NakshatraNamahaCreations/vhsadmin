@@ -46,6 +46,7 @@ import ReviewVideos from "./components/ReviewVideos";
 import Svideo from "./components/Svideo";
 import RateCard from "./RateCard";
 import Training from "./components/Training"
+import VendorSetting from "./components/VendorSetting";
 
 function App() {
   const admin=localStorage.getItem("admin");
@@ -89,6 +90,7 @@ function App() {
         <Route path="/vendordetails/:id" element={<Vendordetails />} />
         <Route path="/feq" element={<FEQ />} />
         <Route path="/Training" element={<Training />} />
+        <Route path="/VendorSetting" element={<VendorSetting />} />
 
         <Route path="/RateCard" element={<RateCard />} />
 

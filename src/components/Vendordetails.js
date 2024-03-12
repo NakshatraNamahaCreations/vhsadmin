@@ -8,12 +8,13 @@ import Modal from "react-bootstrap/Modal";
 
 function Vendordetails() {
   const [show, setShow] = useState(false);
-
+  const [amt, setamt] = useState("")
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const { id } = useParams();
   const [data, setdata] = useState({});
-  console.log("data",data);
+
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const rowDataString = urlParams.get("rowData");
@@ -22,7 +23,36 @@ function Vendordetails() {
     // Use rowData in your component
 
   }, [id]);
-  
+
+  console.log("id", id)
+
+  const updateRecharge = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        `https://api.vijayhomesuperadmin.in/api/updatevendorAmt/${id}`,
+        { vendorAmt: amt },
+        { headers: { "content-type": "application/json" } }
+      );
+
+      if (response.status === 200) {
+        handleClose();
+        alert("Successfully Added");
+        window.location.reload("/vendor");
+      }
+    } catch (error) {
+      console.log("Error response:", error.response);
+      handleClose();
+
+      if (error.response) {
+        alert(error.response.data.error || "Something went wrong");
+      } else {
+        alert("Network error or something went wrong");
+      }
+    }
+  };
+
   return (
     <div div className="row">
       <div className="col-md-2">
@@ -78,7 +108,7 @@ function Vendordetails() {
                     <i class="fa-solid fa-indian-rupee-sign"></i>{data?.vendorAmt}
                   </b>
                 </div>
-{/* 
+
                 <Button
                   style={{
                     background: "rgb(176, 39, 39)",
@@ -88,23 +118,32 @@ function Vendordetails() {
                   onClick={handleShow}
                 >
                   Recharge{" "}
-                </Button> */}
+                </Button>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div>
+        <div style={{ position: 'relative', paddingTop: '56.25%' }}>
+          <iframe
+            src="https://iframe.mediadelivery.net/embed/212658/16cdf0a5-8acd-4bdc-b9cb-9f4f1dc0ffa5?autoplay=true&loop=false&muted=false&preload=true&responsive=true"
+            title="Your Video"
+            loading="lazy"
+            style={{ border: 0, position: 'absolute', top: 0, height: '100%', width: '100%' }}
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+            allowFullScreen
+          ></iframe>
+        </div>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Recharge to vendor wallet</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <input
-              type="password"
+              type="number"
               class="form-control mt-4"
               placeholder="100"
               aria-label="Username"
+              onChange={(e) => setamt(e.target.value)}
               aria-describedby="basic-addon1"
               style={{
                 width: "100%",
@@ -118,7 +157,7 @@ function Vendordetails() {
             <Button variant="secondary" onClick={handleClose}>
               CANCLE
             </Button>
-            <Button variant="primary" onClick={handleClose}>
+            <Button variant="primary" onClick={updateRecharge}>
               ADD
             </Button>
           </Modal.Footer>

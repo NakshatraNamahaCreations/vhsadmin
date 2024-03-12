@@ -173,6 +173,9 @@ function Sidenav() {
             <MenuItem>
               Training  <Link to="/Training" />
             </MenuItem>
+            <MenuItem>
+              Vendor Settings  <Link to="/VendorSetting" />
+            </MenuItem>
           </SubMenu>
           <MenuItem>
             Settings <Link to="/settings" />{" "}
