@@ -233,7 +233,7 @@ function Settings() {
           </div>
 
 
-          <div style={{ marginLeft: "50px", display: "flex", gap: "100px" }}>
+          {/* <div style={{ marginLeft: "50px", display: "flex", gap: "100px" }}>
             <div>
 
 
@@ -283,7 +283,7 @@ function Settings() {
               <Button variant="outlined" onClick={updatedAutomatedServiceOption}>UPDATE</Button>
             </div>
 
-          </div>
+          </div> */}
 
         </div>
       </div>

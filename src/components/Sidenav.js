@@ -166,7 +166,7 @@ function Sidenav() {
             Payment Reports
             <Link to="/Paymentsreports" />
           </MenuItem>
-          <SubMenu title=" Vendors Management">
+          {/* <SubMenu title=" Vendors Management">
             <MenuItem>
               Vendors  <Link to="/vendor" />
             </MenuItem>
@@ -176,7 +176,7 @@ function Sidenav() {
             <MenuItem>
               Vendor Settings  <Link to="/VendorSetting" />
             </MenuItem>
-          </SubMenu>
+          </SubMenu> */}
           <MenuItem>
             Settings <Link to="/settings" />{" "}
           </MenuItem>

@@ -87,7 +87,7 @@ function ServiceBooking() {
     },
     {
       name: "Booked Date",
-      selector: (row) => row.date,
+      // selector: (row) => row.date,
       cell: (row) => (
      
          

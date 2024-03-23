@@ -65,7 +65,7 @@ function Subcategory() {
       formdata.append("trainingvideo", trainingvideo);
       formdata.append("videolink", videolink);
 
-     
+
       try {
         const config = {
           url: "/vendor/addtrainingCenter",
@@ -121,7 +121,7 @@ function Subcategory() {
       formdata.append("desc", editdesc);
       formdata.append("videolink", editvideolink);
 
- 
+
       if (EdittrainingVideo) {
         formdata.append("trainingVideo", EdittrainingVideo);
       }
@@ -164,25 +164,33 @@ function Subcategory() {
       name: "Desc  ",
       selector: (row) => row.desc,
     },
-   
+
     {
       name: "Video link  ",
       selector: (row) => row.videolink,
     },
-    // {
-    //   name: "Training video",
-    //   cell: (row) => (
-    //     <div>
-    //       <video width="150" height="150" controls>
-    //         <source
-    //           src={`https://api.vijayhomesuperadmin.in/trainingCenter/${row.trainingVideo}`}
-    //           type="video/mp4"
-    //         />
-    //       </video>
-    //     </div>
-    //   ),
-    // },
-   
+    {
+      name: "Training video",
+      cell: (row) => (
+        // <div style={{ width: '200px', height: '200px', overflow: 'hidden' }}>
+
+        // </div>
+        <iframe
+          src={row.videolink}
+          title="Your Video"
+          loading="lazy"
+          style={{
+            // width: '100%',
+            // height: '100%',
+            objectFit: 'cover', // or 'contain' depending on your preference
+          }}
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+          allowFullScreen
+        ></iframe>
+      ),
+    },
+
+
     {
       name: "Action",
       cell: (row) => (
@@ -231,7 +239,7 @@ function Subcategory() {
 
 
 
- 
+
 
   return (
     <div div className="row">
@@ -246,7 +254,7 @@ function Subcategory() {
           <div className="col-md-12">
             <div className="card" style={{ marginTop: "30px" }}>
               <div className="card-body p-3">
-             
+
                 <form>
                   <div className="row">
                     <div className="col-md-4">
@@ -305,17 +313,17 @@ function Subcategory() {
                     </div> */}
                   </div>
                   <div className="col-md-4 mt-3">
-                      <div className="vhs-input-label">
-                        Description <span className="text-danger"> *</span>
-                      </div>
-                      <div className="group pt-1">
-                        <input
-                          type="text"
-                          className="vhs-input-value col-md-12"
-                          onChange={(e) => setdesc(e.target.value)}
-                        />
-                      </div>
+                    <div className="vhs-input-label">
+                      Description <span className="text-danger"> *</span>
                     </div>
+                    <div className="group pt-1">
+                      <input
+                        type="text"
+                        className="vhs-input-value col-md-12"
+                        onChange={(e) => setdesc(e.target.value)}
+                      />
+                    </div>
+                  </div>
                   <div className="row pt-3 justify-content-center">
                     <div className="col-md-2">
                       <button className="vhs-button" onClick={postsubcategory}>
@@ -350,7 +358,7 @@ function Subcategory() {
           </div>
         </div>
 
-   
+
         <Modal
           show={show}
           onHide={handleClose}
@@ -392,7 +400,7 @@ function Subcategory() {
                       type="text"
                       className="col-md-12 vhs-input-value"
                       onChange={(e) => setEditheader(e.target.value)}
-              
+
                       defaultValue={
                         Editheader || editTrainingvideo
                           ? editTrainingvideo.header
@@ -401,7 +409,7 @@ function Subcategory() {
                     />
                   </div>
                 </div>
-               
+
 
                 <div className="col-md-12 mt-4">
                   <div className="vhs-input-label">
@@ -412,7 +420,7 @@ function Subcategory() {
                       type="text"
                       className="col-md-12 vhs-input-value"
                       onChange={(e) => setEditdesc(e.target.value)}
-              
+
                       defaultValue={
                         editdesc || editTrainingvideo
                           ? editTrainingvideo.desc
@@ -430,7 +438,7 @@ function Subcategory() {
                       type="text"
                       className="col-md-12 vhs-input-value"
                       onChange={(e) => seteditvideolink(e.target.value)}
-              
+
                       defaultValue={
                         editvideolink || editTrainingvideo
                           ? editTrainingvideo.videolink
@@ -439,8 +447,8 @@ function Subcategory() {
                     />
                   </div>
                 </div>
-               
-               
+
+
                 <div className="row pt-3">
                   <div className="col-md-2">
                     <button className="vhs-button" onClick={editservices}>

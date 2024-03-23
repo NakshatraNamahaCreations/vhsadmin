@@ -5,6 +5,7 @@ import Header from "./Header";
 import DataTable from "react-data-table-component";
 import Modal from "react-bootstrap/Modal";
 import Multiselect from "multiselect-react-dropdown";
+import ReactHlsPlayer from 'react-hls-player';
 
 function Subcategory() {
   const [data1, setdata1] = useState([]);
@@ -27,6 +28,9 @@ function Subcategory() {
   const [othservice1, setothservice1] = useState(
     editSubcategoryData?.othservice || []
   );
+
+  const [videoLink, setvideoLink] = useState("");
+  const [videoLink1, setvideoLink1] = useState(editSubcategoryData?.videolink);
 
   const [homePagetitle, sethomePagetitle] = useState("");
 
@@ -64,10 +68,12 @@ function Subcategory() {
       formdata.append("subcategory", subcategory);
       formdata.append("subcatimg", subcategoryImg);
       formdata.append("subcatvideo", subcatvideo);
+      formdata.append("videolink", videoLink);
+
       formdata.append("homePagetitle", homePagetitle);
       formdata.append("othservice", JSON.stringify(othservice));
 
-     
+
       try {
         const config = {
           url: "/userapp/addappsubcat",
@@ -110,7 +116,7 @@ function Subcategory() {
   const getsubcategory = async () => {
     let res = await axios.get("https://api.vijayhomesuperadmin.in/api/userapp/getappsubcat");
     if ((res.status = 200)) {
-      console.log(res);
+      console.log("res.data?.subcategory", res.data?.subcategory);
       setsubcategorydata(res.data?.subcategory);
       setfilterdata(res.data?.subcategory);
     }
@@ -122,6 +128,7 @@ function Subcategory() {
     try {
       formdata.append("category", editCategory);
       formdata.append("subcategory", editSubcategory);
+      formdata.append("videolink", videoLink1);
       formdata.append("homePagetitle", edithomePagetitle);
       formdata.append("othservice", JSON.stringify(othservice1));
       if (editSubcategoryImage) {
@@ -186,12 +193,23 @@ function Subcategory() {
       name: "Subcategory video",
       cell: (row) => (
         <div>
-          <video width="150" height="150" controls>
+          {/* <video width="150" height="150" controls>
             <source
-              src={`https://api.vijayhomesuperadmin.in/subcat/${row.subcatvideo}`}
+              src={`https://api.vijayhomesuperadmin.in/subcat/${row.videolink}`}
               type="video/mp4"
             />
-          </video>
+          </video> */}
+
+          {row.videolink && (
+  <ReactHlsPlayer
+    src={row.videolink}
+    autoPlay={false}
+    controls={true}
+    width="100%"
+    height="100px"
+  />
+)}
+
         </div>
       ),
     },
@@ -326,7 +344,7 @@ function Subcategory() {
           <div className="col-md-12">
             <div className="card" style={{ marginTop: "30px" }}>
               <div className="card-body p-3">
-             
+
                 <form>
                   <div className="row">
                     <div className="col-md-4">
@@ -378,21 +396,28 @@ function Subcategory() {
                   </div>
                   <div className="row">
                     <div className="col-md-4 mt-4">
-                      <div className="vhs-input-label">Subcategory Video</div>
-                      <div className="group pt-1">
+                      <div className="vhs-input-label">Video Link</div>
+                      {/* <div className="group pt-1">
                         <input
                           type="file"
                           accept="video/*"
                           className="col-md-12 vhs-input-value"
                           onChange={(e) => setsubcatvideo(e.target.files[0])}
                         />
-                      </div>
-                      <p className="mt-2">
+                      </div> */}
+                      {/* <p className="mt-2">
                         {" "}
                         <b>
                           Note:Width= 400px ,Height:200px and mp4 format
                         </b>{" "}
-                      </p>
+                      </p> */}
+                      <div className="group pt-1">
+                        <input
+                          type="text"
+                          className="vhs-input-value col-md-12"
+                          onChange={(e) => setvideoLink(e.target.value)}
+                        />
+                      </div>
                     </div>
                     <div className="col-md-4 mt-4">
                       <div className="vhs-input-label">Home page title</div>
@@ -457,7 +482,7 @@ function Subcategory() {
           </div>
         </div>
 
-   
+
         <Modal
           show={show}
           onHide={handleClose}
@@ -528,15 +553,23 @@ function Subcategory() {
 
                 <div className="col-md-12 m-4">
                   <div className="vhs-input-label">
-                    Subcategory Video <span className="text-danger"> *</span>
+                    Video  Link<span className="text-danger"> *</span>
                   </div>
 
-                  <input
+                  <div className="group pt-1">
+                    <input
+                      type="text"
+                      className="vhs-input-value col-md-12"
+                      defaultValue={editSubcategoryData?.videolink}
+                      onChange={(e) => setvideoLink1(e.target.value)}
+                    />
+                  </div>
+                  {/* <input
                     type="file"
                     accept="video/*"
                     className="col-md-12 vhs-input-value"
                     onChange={(e) => setEditSubcategoryVideo(e.target.files[0])}
-                  />
+                  /> */}
                 </div>
                 <div className="col-md-12 mt-4">
                   <div className="vhs-input-label">Home page title</div>

@@ -123,16 +123,7 @@ function Vendordetails() {
             </div>
           </div>
         </div>
-        <div style={{ position: 'relative', paddingTop: '56.25%' }}>
-          <iframe
-            src="https://iframe.mediadelivery.net/embed/212658/16cdf0a5-8acd-4bdc-b9cb-9f4f1dc0ffa5?autoplay=true&loop=false&muted=false&preload=true&responsive=true"
-            title="Your Video"
-            loading="lazy"
-            style={{ border: 0, position: 'absolute', top: 0, height: '100%', width: '100%' }}
-            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-            allowFullScreen
-          ></iframe>
-        </div>
+      
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Recharge to vendor wallet</Modal.Title>
